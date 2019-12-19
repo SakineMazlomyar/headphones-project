@@ -1,1 +1,1 @@
-console.log('hej from develop' )
+console.log('hej from init project' )
