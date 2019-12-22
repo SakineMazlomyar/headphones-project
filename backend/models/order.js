@@ -50,8 +50,8 @@ const order = new Schema({
             type:Schema.Types.ObjectId,
             ref:'Shipper'
     }
-    
-
-})
+},
+{timestamps:true}
+)
 
 module.exports = mongoose.model('Order', order);

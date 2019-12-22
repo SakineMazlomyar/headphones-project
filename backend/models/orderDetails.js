@@ -6,12 +6,12 @@ const orderDetails = new Schema({
        type:Number,
        required:true
    },
-   orderIds: [{
+   orderId: {
 
     type:Schema.Types.ObjectId,
     ref:'Order'
      
-    }],
+    },
 
     productIds : [{
         type:Schema.Types.ObjectId,
