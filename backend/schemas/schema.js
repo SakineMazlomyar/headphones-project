@@ -30,6 +30,9 @@ let schema = buildSchema (`
         pictureUrl:String!
     }
 
+    input ProductDelete {
+        _id: ID!
+    }
 
     type RootQuery {
         users: [User!]!
@@ -38,10 +41,12 @@ let schema = buildSchema (`
       
 
     }
+    
 
     type RootMutation {
         createUser(UserInput:UserInput):User
         createProduct(ProductInput: ProductInput):Product
+        deleteProduct(ProductDelete:ProductDelete):Product
 
     }
     schema {
