@@ -1,14 +1,14 @@
 const express = require('express');
 require('./connection').initilise();
 const bodyParser = require('body-parser');
-let path = require('path');
+
 const graphqlHTTP = require('express-graphql');
 
-
-
 let app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 const User = require('./models/user');
 const Root  = require('./resolvers/resolver');
 const Schema = require('./schemas/schema')
@@ -18,10 +18,17 @@ app.use('/graphql',graphqlHTTP({
     schema:Schema ,
     graphiql:true,
     rootValue: Root,
-}))
+}));
+
+app.post('/hej',(req, res)=>{
+    res.json({text:'hola'})
+})
 
 
 
+
+const port = 5000;
+let portInfo = app.listen(port,()=>{ console.log('Server started at port: '+ portInfo.address().port)});
 
 
 
@@ -45,6 +52,3 @@ products: () => {
 
 
 */
-
-const port = 5000;
-let portInfo = app.listen(port,()=>{ console.log('Server started at port: '+ portInfo.address().port)})

@@ -31,7 +31,23 @@ const  Root ={
         })
 
 
+    },
+    login: async ({ email, password }) => {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new Error('User does not exist!');
     }
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+      throw new Error('Password is incorrect!');
+    }
+    
+    return{userId:user._id, email:user.email};
+  }
+
+
+
+
 
 }
 module.exports = Root;

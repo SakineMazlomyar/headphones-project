@@ -11,9 +11,15 @@ let schema = buildSchema (`
         password:String!
     }
     
+    type AuthData {
+        userId: ID!
+        email:String!
+    }
+
 
     type RootQuery {
         users: [User!]!
+        login(email: String!, password: String!): AuthData!
 
     }
 
