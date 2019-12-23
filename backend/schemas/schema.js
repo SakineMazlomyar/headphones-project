@@ -5,7 +5,14 @@ let schema = buildSchema (`
         email:String!
         password:String
     }
-
+    type Product {
+        _id: ID!
+        productName: String!
+        unitInStock:Int!
+        unitPrice:Int!
+        pictureUrl:String!
+    }
+    
     input UserInput {
         email:String!
         password:String!
@@ -16,16 +23,25 @@ let schema = buildSchema (`
         email:String!
     }
 
+   input ProductInput {
+        productName: String!
+        unitInStock:Int!
+        unitPrice:Int!
+        pictureUrl:String!
+    }
+
 
     type RootQuery {
         users: [User!]!
         login(email: String!, password: String!): AuthData!
+        products:[Product!]!
+      
 
     }
 
     type RootMutation {
-
         createUser(UserInput:UserInput):User
+        createProduct(ProductInput: ProductInput):Product
 
     }
     schema {

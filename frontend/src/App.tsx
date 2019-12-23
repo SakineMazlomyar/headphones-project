@@ -1,8 +1,11 @@
 import React,{ Component } from 'react';
-import Form from './Form';
-
+//import Form from './signInSignUp/Form';
+import Layout from './Layout'
+import { BrowserRouter } from 'react-router-dom';
 
 interface State {
+    userId:string,
+    email:string
 
 }
 
@@ -12,20 +15,26 @@ interface Props {}
     constructor(props: Props){
         super(props);
         this.state = {
-
+            userId:'',
+            email:''
         }
     }
 
-    isLoggedin = (user:{email:string, userId:string,isLoggedIn:boolean})=>{
-
+    isLoggedin = (user:{email:string, userId:string})=>{
+        console.log(user, 'hello from user')
+        this.setState({userId:user.userId, email:user.email})
     }
-
+    /* // <Form isLoggedin={this.isLoggedin}/>
+    
+    */
 
     render() {
-    return (
 
+    return (
     <div>
-        <Form isLoggedin={this.isLoggedin}/>
+        <BrowserRouter>
+            <Layout />
+        </BrowserRouter>
     </div>
     )}
 

@@ -11,7 +11,7 @@ interface State{
     email:string,
     password:string,
     isLoggedIn:boolean,
-    signUpOrSignIn:string
+ 
 
 }
 
@@ -23,14 +23,14 @@ export default class Form extends Component<Props,State>{
             email:'',
             password:'',
             isLoggedIn:false,
-            signUpOrSignIn:"Please Sign Up!"
+          
         
         }
     }
 
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        console.log(this.state)
+     
         let requestBody = {
             query: `
               query {
@@ -63,22 +63,28 @@ export default class Form extends Component<Props,State>{
                   'Content-Type': 'application/json'
                 }
               })
-
+              
               let actuResponse = await res.data;
-              if (res.status !== 200 && res.status !== 201) {
-                throw new Error('Failed!');
-              } else if(actuResponse.data.createUser === null){
-                  console.log('it is here')
-                  console.log(actuResponse)
-                  this.setState({isLoggedIn:true}, ()=>console.log(this.state))
-                alert(actuResponse.errors[0].message)
-              } else {
-                  console.log (actuResponse.data);
-              }
+            
+            
+            if (res.status !== 200) {
+                //When user insert wrong info we send it catch
+                throw new Error('Request Failed '+ res.status)
+            } else if(actuResponse.data.createUser === null || actuResponse.data === null) {
+                //When use insert the same email to create a new user
+                alert(actuResponse.errors[0].message);
+            } else if(actuResponse.errors) {
+                  console.log (actuResponse);
+                  alert('Error at sign in!')
+            } else {
+              //this.props.isLoggedin(actuResponse.data.login)
+                actuResponse.data.createUser?alert('We created new user'): alert('You are logged in now')
+            }
 
 
-          } catch(error){
-            throw new Error ('Error at create use '+ error)
+          } catch(err){
+            alert('Wrong info!Try again!')
+             console.log(err)
           }
           
 
@@ -94,19 +100,24 @@ export default class Form extends Component<Props,State>{
         
     }
 
-    switchToLogin = ()=>{
-        if(this.state.isLoggedIn) {
-            this.setState({signUpOrSignIn:"Sign In Please!"})
-        }
-    }
+    handleLogout = () => { this.setState({ isLoggedIn: false })}
+    handleLogin = () => { this.setState({ isLoggedIn: true })}
     
+    renderSignInSignUp = ()=> {
+        
+      return this.state.isLoggedIn ? <button onClick={this.handleLogout}>Sign In</button>: <button onClick={this.handleLogin}>Sign Up</button>;
+  }
 
 
 
     render(){
+    
         return(
+            <div style={formtStyle}>
+              <h1>{this.state.isLoggedIn?'Sign In':'Sign Up!' }</h1>
+                <label>Byt till {this.renderSignInSignUp()}</label>
+
             <form onSubmit={this.handleSubmit} style={formtStyle}>
-                <h1>Create User </h1>
                 <label htmlFor="text" style={input}>
                     Ange ditt email: 
                     <input type="email"  placeholder='email' onChange={this.handleOnChange} required/>
@@ -115,9 +126,9 @@ export default class Form extends Component<Props,State>{
                 <label htmlFor="text">
                     Ange ditt password: <input type="password"  placeholder="password" onChange={this.handleOnChange} required/>
                 </label>
-                <input type="submit" value={this.state.signUpOrSignIn}/>
-                {this.switchToLogin()}
+                <input type="submit" value='Submit'/>
             </form>
+            </div>
 
         )
     }
