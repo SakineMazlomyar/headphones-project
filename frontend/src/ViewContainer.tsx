@@ -6,10 +6,21 @@ import ProductPage from './product/ProductPage';
 import ContactPage from './contacts/ContactPage';
 import Form from './signInSignUp/Form';
 import ShoppingCard  from './shoppingCard/shoppingCard';
+ interface State {
 
+ }
 
-export default class ViewContainer extends React.Component{
-   
+ interface Props {
+    signedInUser:()=>void
+ }
+
+export default class ViewContainer extends React.Component<Props, State>{
+    constructor(props:Props) {
+        super(props);
+        this.state = {
+
+        }
+    }
     render(){
         return (
         <React.Fragment>            
@@ -18,7 +29,7 @@ export default class ViewContainer extends React.Component{
                 <Route exact path="/" component={MainView}  />
                 <Route path="/productPage"  component={ProductPage}/>
                 <Route path="/contact" component={ContactPage}/>
-                <Route path="/SigninSignUp" component={Form}/>
+                <Route path="/SigninSignUp" render={()=> <Form signedInUser={this.props.signedInUser}/>} />
                 <Route path="/shoppingCard" component={ShoppingCard}/>
 
             </React.Fragment>

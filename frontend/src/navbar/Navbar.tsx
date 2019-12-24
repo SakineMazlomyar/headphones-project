@@ -1,11 +1,27 @@
-import React,{CSSProperties} from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './navbar.css'
-export default class Navbar extends React.Component{
+interface Props{
+    signedInUser:()=>any
+}
+
+interface State{
+
+}
+export default class Navbar extends React.Component<Props, State>{
+    constructor(props:Props){
+        super(props);
+        this.state = {
+
+        }
+    }
     
+
+
     render(){
         return(
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+         
        
             <Link to={"/"}>
                    <span className="navbar-brand">SmartHeadphone</span>
@@ -32,6 +48,10 @@ export default class Navbar extends React.Component{
             <Link to={"/SigninSignUp"}>
                 <span className="nav-link"> Signin SignUp Page</span>
             </Link>
+          </li>
+          <li  className="nav-item">
+            {this.props.signedInUser()
+            }
           </li>
         
         </ul>

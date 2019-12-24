@@ -3,7 +3,8 @@ import Axios from 'axios';
 
 interface Props {
 
-    isLoggedin:(user:{email:string, userId:string,isLoggedIn:boolean})=>void
+  
+    signedInUser:()=>void
 
 }
 
@@ -11,7 +12,9 @@ interface State{
     email:string,
     password:string,
     isLoggedIn:boolean,
-    text:string
+    text:string,
+    signOut: boolean,
+    current_user:string
  
 
 }
@@ -25,6 +28,8 @@ export default class Form extends Component<Props,State>{
             password:'',
             isLoggedIn:false,
             text:'',
+            signOut:false,
+            current_user:''
           
         
         }
@@ -109,7 +114,7 @@ export default class Form extends Component<Props,State>{
      if(parsetUsers.length > 0 ) {
        console.log('0')
       localStorage.removeItem("current_user");
-      localStorage.setItem("current_user", ` {id:${user.userId}, username:${user.username}}`);
+      localStorage.setItem("current_user", JSON.stringify({id:user.userId, username:user.username}));
       let existUser = false
         parsetUsers.filter((savedUser:any)=>{
 
@@ -127,7 +132,8 @@ export default class Form extends Component<Props,State>{
           parsetUsers.push(sigendInUser)
           localStorage.setItem("users", JSON.stringify(parsetUsers))
         }
-
+    
+            
         alert('You are signed in')
      } else {
        console.log('1')
@@ -135,10 +141,12 @@ export default class Form extends Component<Props,State>{
       parsetUsers.push(sigendInUser)
       let newLocatStorage = localStorage.setItem("users", JSON.stringify(parsetUsers));
       console.log(newLocatStorage)
-      localStorage.setItem("current_user", ` {id:${user.userId}, username:${user.username}}`);
-     }
-
+      localStorage.setItem("current_user", JSON.stringify({id:user.userId, username:user.username}));
       alert('You are signed in')
+     }
+     this.props.signedInUser()
+     this.setState({signOut:true, email:'', password:'', text:'' , current_user:user.username})
+     
     }
 
     handleOnChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -153,33 +161,62 @@ export default class Form extends Component<Props,State>{
     renderSignInSignUp = ()=> {
         
       return this.state.isLoggedIn ? <button onClick={this.handleLogout}>Sign In</button>: <button onClick={this.handleLogin}>Sign Up</button>;
-  }
+    }
 
+    renderUsername = ()=> {
+      if(this.state.isLoggedIn) {
+        return '';
 
+      } else {
+        return (
+        <label htmlFor="text">
+            Ange ditt nam: <input type="text"  placeholder="name" onChange={this.handleOnChange} value={this.state.text} required/>
+        </label>
+        )
+      }
+    }
+
+    renderForm = ()=>{
+        return (
+
+            <div style={formtStyle}>
+            <h1>{this.state.isLoggedIn?'Sign In':'Sign Up!' }</h1>
+              <label>Byt till {this.renderSignInSignUp()}</label>
+
+          <form onSubmit={this.handleSubmit} style={formtStyle}>
+              <label htmlFor="text" style={input}>
+                  Ange ditt email: 
+                  <input type="email"  placeholder='email' onChange={this.handleOnChange} value={this.state.email}  required/>
+              </label>
+              
+              <label htmlFor="text">
+                  Ange ditt password: <input type="password"  placeholder="password" onChange={this.handleOnChange} value={this.state.password} required/>
+              </label>
+                 {this.renderUsername()}
+              <input type="submit" value='Submit'/>
+          </form>
+          </div>
+
+        )
+    }
+
+    /* Funder på när man laddar om sidan ska man inte loggas ut om man inte har tryckt på logg out än */
+    renderSignOutButton = ()=>{
+        let current_user :any = localStorage.getItem("current_user");
+        let parsedCurrentUser:any = JSON.parse(current_user);
+
+        return this.state.signOut === true || this.state.current_user !== ''? <button onClick={()=>{
+            localStorage.removeItem("current_user");
+            this.setState({signOut:false, current_user:''})
+    
+        }}>Sign Out</button> : this.renderForm();
+    
+    }
 
     render(){
-    
-        return(
-            <div style={formtStyle}>
-              <h1>{this.state.isLoggedIn?'Sign In':'Sign Up!' }</h1>
-                <label>Byt till {this.renderSignInSignUp()}</label>
+        return (
 
-            <form onSubmit={this.handleSubmit} style={formtStyle}>
-                <label htmlFor="text" style={input}>
-                    Ange ditt email: 
-                    <input type="email"  placeholder='email' onChange={this.handleOnChange} required/>
-                </label>
-                
-                <label htmlFor="text">
-                    Ange ditt password: <input type="password"  placeholder="password" onChange={this.handleOnChange} required/>
-                </label>
-                <label htmlFor="text">
-                    Ange ditt nam: <input type="text"  placeholder="name" onChange={this.handleOnChange} required/>
-                </label>
-                <input type="submit" value='Submit'/>
-            </form>
-            </div>
-
+           this.renderSignOutButton()
         )
     }
 }

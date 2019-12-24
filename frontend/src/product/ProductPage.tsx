@@ -108,7 +108,7 @@ export default class ProductPage extends React.Component<Props, State> {
 
     render(){
         return(
-          <div id={"container-fluid"}> 
+          <div className={"container-fluid"}> 
                {this.renderProducts()}
             </div>
             
