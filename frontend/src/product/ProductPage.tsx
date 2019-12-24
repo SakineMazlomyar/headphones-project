@@ -83,8 +83,11 @@ export default class ProductPage extends React.Component<Props, State> {
             
             
                     
-             return   <div className={'item'}>
-                          <img className={'img'} src={`../imgs/${product.pictureUrl}`} alt=""/>
+             return   <div 
+             className={"d-flex flex-column align-items-center backgroundOdd"}
+            
+             >
+                          <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
                           <h2> Produkt Namn: {product.productName}</h2>
                           <h3>Produkt priset: {product.unitPrice}</h3>
                           <h4>Produkt quentity: {product.unitInStock}</h4>
@@ -108,9 +111,7 @@ export default class ProductPage extends React.Component<Props, State> {
 
     render(){
         return(
-          <div id={"productContainer"}>
-          <img src={s61Wireless} alt="haahah"/>
-               <h1>Product Sida</h1>
+          <div id={"container-fluid"}> 
                {this.renderProducts()}
             </div>
             

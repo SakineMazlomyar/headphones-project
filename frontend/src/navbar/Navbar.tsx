@@ -5,33 +5,53 @@ export default class Navbar extends React.Component{
     
     render(){
         return(
-                
-            <ul>
-                <Link to={"/"}>
-                   <h1>Hem</h1>
-                </Link>
-                <Link to={"/productPage"}>
-                    <h3><span> Product Page</span></h3>
-                </Link>
-                <Link to={"/contact"}>
-                    <h3><span> Contact Page</span></h3>
-                </Link>
-                <Link to={"/SigninSignUp"}>
-                <h3><span> Signin SignUp Page</span></h3>
-                </Link>
-                
-            </ul>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+       
+            <Link to={"/"}>
+                   <span className="navbar-brand">SmartHeadphone</span>
+            </Link>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul className="navbar-nav mr-auto">
+
+            <li className="nav-item active">
+            <Link to={"/productPage"}>
+                    <span className="nav-link" > Product Page</span>
+            </Link>
+          </li>
+          <li className="nav-item">
+          
+            <Link to={"/contact"}>
+                    <span className="nav-link"> Contact Page</span>
+            </Link>
+          </li>
+          <li  className="nav-item">
+            <Link to={"/SigninSignUp"}>
+                <span className="nav-link"> Signin SignUp Page</span>
+            </Link>
+          </li>
+        
+        </ul>
+            <form className="form-inline my-2 my-lg-0">
+            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <h4  className="nav-item">
+            <Link to={"/shoppingCard"}>
+                <span  className="fas fa-shopping-cart text-black navbar-text nav-link kundVagnWidth"> kundvagn</span>
+            </Link>
+          </h4>
+        </div>
+        </nav>
             
         )
     }
 }
 
-const ul:CSSProperties={
-    display:"flex", 
-    flexDirection:"column",
-    justifyContent:"center"
- 
-}
+
 
 
 

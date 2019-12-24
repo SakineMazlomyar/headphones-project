@@ -4,7 +4,8 @@ import  { Route} from 'react-router';
 import MainView from './mainView/MainView';
 import ProductPage from './product/ProductPage';
 import ContactPage from './contacts/ContactPage';
-import Form from './signInSignUp/Form'
+import Form from './signInSignUp/Form';
+import ShoppingCard  from './shoppingCard/shoppingCard';
 
 
 export default class ViewContainer extends React.Component{
@@ -18,6 +19,7 @@ export default class ViewContainer extends React.Component{
                 <Route path="/productPage"  component={ProductPage}/>
                 <Route path="/contact" component={ContactPage}/>
                 <Route path="/SigninSignUp" component={Form}/>
+                <Route path="/shoppingCard" component={ShoppingCard}/>
 
             </React.Fragment>
         </Switch>
