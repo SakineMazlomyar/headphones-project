@@ -11,6 +11,7 @@ interface State{
     email:string,
     password:string,
     isLoggedIn:boolean,
+    text:string
  
 
 }
@@ -23,20 +24,29 @@ export default class Form extends Component<Props,State>{
             email:'',
             password:'',
             isLoggedIn:false,
+            text:'',
           
         
         }
     }
 
+    /* 
+    add func for updating a user password or delete a user
+    add func if user is logged in do not show form else show form
+    
+    */
+
+
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-     
+      console.log(this.state)
         let requestBody = {
             query: `
               query {
                 login(email: "${this.state.email}", password: "${this.state.password}") {
                   userId
                   email
+                  username
                 }
               }
             `
@@ -46,9 +56,10 @@ export default class Form extends Component<Props,State>{
             requestBody = {
               query: `
                 mutation {
-                  createUser(UserInput: {email: "${this.state.email}", password: "${this.state.password}"}) {
+                  createUser(UserInput: {email: "${this.state.email}", password: "${this.state.password}", username:"${this.state.text}"}) {
                     _id
                     email
+                    username
                   }
                 }
               `
@@ -78,7 +89,7 @@ export default class Form extends Component<Props,State>{
                   alert('Error at sign in!')
             } else {
               //this.props.isLoggedin(actuResponse.data.login)
-                actuResponse.data.createUser?alert('We created new user'): alert('You are logged in now')
+                actuResponse.data.createUser?alert('We created new user'):this.saveUser(actuResponse.data.login)
             }
 
 
@@ -90,9 +101,45 @@ export default class Form extends Component<Props,State>{
 
     }
 
+    saveUser = (user:{userId:string, email:string, username:string})=>{
+      console.log(user)
+      let users:any = localStorage.getItem("users");
+      let parsetUsers = JSON.parse(users);
+      /* Check if this user is already in locastorage */
+     if(parsetUsers.length > 0 ) {
+       console.log('0')
+      localStorage.removeItem("current_user");
+      localStorage.setItem("current_user", ` {id:${user.userId}, username:${user.username}}`);
+      let existUser = false
+        parsetUsers.filter((savedUser:any)=>{
 
+          if(savedUser.email === user.email ) {
+            console.log(savedUser.email, user.email)
+            existUser = true
+           
+             
+          }
+          
+        })
 
+        if(!existUser) {
+          let sigendInUser = {id:user.userId, email:user.email, choosenProducts:[]}
+          parsetUsers.push(sigendInUser)
+          localStorage.setItem("users", JSON.stringify(parsetUsers))
+        }
 
+        alert('You are signed in')
+     } else {
+       console.log('1')
+      let sigendInUser = {id:user.userId, email:user.email, choosenProducts:[]}
+      parsetUsers.push(sigendInUser)
+      let newLocatStorage = localStorage.setItem("users", JSON.stringify(parsetUsers));
+      console.log(newLocatStorage)
+      localStorage.setItem("current_user", ` {id:${user.userId}, username:${user.username}}`);
+     }
+
+      alert('You are signed in')
+    }
 
     handleOnChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
         this.setState({[event.target.type]:event.target.value } as Pick <State,any> )
@@ -125,6 +172,9 @@ export default class Form extends Component<Props,State>{
                 
                 <label htmlFor="text">
                     Ange ditt password: <input type="password"  placeholder="password" onChange={this.handleOnChange} required/>
+                </label>
+                <label htmlFor="text">
+                    Ange ditt nam: <input type="text"  placeholder="name" onChange={this.handleOnChange} required/>
                 </label>
                 <input type="submit" value='Submit'/>
             </form>

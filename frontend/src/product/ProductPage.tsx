@@ -1,10 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
 import  './productPage.css'
-import urbanears from '../imgs/urbanears.jpg';
-import soundlessHeadphone from '../imgs/soundless-headphones.jpg';
-import s61Wireless from '../imgs/s61-wireless.jpg';
-//import qualityHeadphones from '../imgs/quality-headphones.jpg';
+
 interface Props {
 
 }
@@ -30,12 +27,12 @@ export default class ProductPage extends React.Component<Props, State> {
         
         }
 
-       // this.pictures = [urbanears,soundlessHeadphone, s61Wireless,qualityHeadphones ];
+   
     }
 
 
     componentDidMount(){
-      console.log(urbanears)
+    
         this.getProducts()
 
     }

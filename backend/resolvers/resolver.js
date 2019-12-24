@@ -19,7 +19,8 @@ const  Root ={
            
             const user = new User({
                 email:args.UserInput.email,
-                password:password
+                password:password,
+                username:args.UserInput.username
             })
             return user.save()
     
@@ -46,7 +47,7 @@ const  Root ={
           throw new Error('Password is incorrect!');
         }
         
-        return{userId:user._id, email:user.email};
+        return{userId:user._id, email:user.email, username:user.username};
     }catch(error){
         console.log('Error at sign in '+ error)
     }

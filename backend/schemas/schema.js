@@ -4,6 +4,7 @@ let schema = buildSchema (`
         _id: ID!
         email:String!
         password:String
+        username:String!
     }
     type Product {
         _id: ID!
@@ -16,11 +17,13 @@ let schema = buildSchema (`
     input UserInput {
         email:String!
         password:String!
+        username:String!
     }
     
     type AuthData {
         userId: ID!
         email:String!
+        username:String!
     }
 
    input ProductInput {
