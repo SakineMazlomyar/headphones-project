@@ -1,10 +1,15 @@
 import React,{Component, CSSProperties} from 'react';
 import Axios from 'axios';
 
+interface CurrentUser {
+  id:string,
+  username:string
+}
 interface Props {
 
   
-    signedInUser:()=>void
+    signedInUser:()=>void,
+    userInfo: CurrentUser
 
 }
 
@@ -200,23 +205,22 @@ export default class Form extends Component<Props,State>{
         )
     }
 
-    /* Funder på när man laddar om sidan ska man inte loggas ut om man inte har tryckt på logg out än */
-    renderSignOutButton = ()=>{
-        let current_user :any = localStorage.getItem("current_user");
-        let parsedCurrentUser:any = JSON.parse(current_user);
-
-        return this.state.signOut === true || this.state.current_user !== ''? <button onClick={()=>{
-            localStorage.removeItem("current_user");
-            this.setState({signOut:false, current_user:''})
-    
-        }}>Sign Out</button> : this.renderForm();
-    
+    renderCurrentUserInfo = ()=>{
+      if(this.props.userInfo.id !== '') {
+        return <h1>Here is current orders</h1>
+      } else {
+        return this.renderForm()
+      }
     }
+
+
+
+
 
     render(){
         return (
 
-           this.renderSignOutButton()
+           this.renderCurrentUserInfo()
         )
     }
 }

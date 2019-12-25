@@ -6,20 +6,39 @@ import ProductPage from './product/ProductPage';
 import ContactPage from './contacts/ContactPage';
 import Form from './signInSignUp/Form';
 import ShoppingCard  from './shoppingCard/shoppingCard';
+import CheckOut from './checkOut/checkOut';
+interface Product {
+    productName: string,
+    _id:string,
+    unitPrice:number,
+    unitInStock:number,
+    pictureUrl:string
+}
  interface State {
-
+    products:Product[]
  }
+ 
+interface CurrentUser {
+    id:string,
+    username:string
+}
 
  interface Props {
-    signedInUser:()=>void
+    signedInUser:()=>void,
+    userInfo:CurrentUser
  }
 
 export default class ViewContainer extends React.Component<Props, State>{
     constructor(props:Props) {
         super(props);
         this.state = {
-
+            products:[]
         }
+    }
+
+    getAddedProducts = (products:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>{
+     
+        return products
     }
     render(){
         return (
@@ -27,10 +46,11 @@ export default class ViewContainer extends React.Component<Props, State>{
         <Switch>
             <React.Fragment>
                 <Route exact path="/" component={MainView}  />
-                <Route path="/productPage"  component={ProductPage}/>
+                <Route path="/productPage"  render={ ()=> <ProductPage getAddedProducts={this.getAddedProducts}/>}/>
                 <Route path="/contact" component={ContactPage}/>
-                <Route path="/SigninSignUp" render={()=> <Form signedInUser={this.props.signedInUser}/>} />
-                <Route path="/shoppingCard" component={ShoppingCard}/>
+                <Route path="/SigninSignUp" render={()=> <Form signedInUser={this.props.signedInUser} userInfo={this.props.userInfo}/>} />
+                <Route path="/shoppingCard" render={()=><ShoppingCard userInfo={this.props.userInfo}/>}/>
+                <Route path="/checkOut" render={()=><CheckOut/>}/>
 
             </React.Fragment>
         </Switch>

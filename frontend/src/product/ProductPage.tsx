@@ -3,7 +3,7 @@ import Axios from 'axios';
 import  './productPage.css'
 
 interface Props {
-
+  getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void
 }
 
 interface Product {
@@ -95,8 +95,14 @@ export default class ProductPage extends React.Component<Props, State> {
         }
     }
 
-    addProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number})=>{
-        console.log(product)
+    addProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number,pictureUrl:string})=>{
+        
+        let shoppingCart:any = localStorage.getItem("shoppingcart");
+        let parsedShoppingCart = JSON.parse(shoppingCart);
+        parsedShoppingCart.push(product)
+        localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart))
+        this.props.getAddedProducts(parsedShoppingCart)
+
     }
     viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number})=>{
         console.log(product)
