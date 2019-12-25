@@ -1,5 +1,6 @@
 const User = require('../models/user');
-const Product = require('../models/product')
+const Product = require('../models/product');
+const Shipper = require('../models/shipper');
 const bcrypt = require('bcryptjs');
 const  Root ={
     
@@ -88,7 +89,34 @@ const  Root ={
             throw new Error ('Product does not exist!')
         }
         return Product.deleteOne({_id:args.ProductDelete._id})
-    }
+    },
+    shippers :()=>{
+        return Shipper.find();
+    },
+    createShipper: async (args) => {
+        try {
+
+            let ShipperRes = await Shipper.findOne({companyName:args.ShipperInput.companyName});
+            let relShippers = await ShipperRes 
+            console.log(relShippers)
+            if(relShippers) {
+                throw new Error('Shipper Method Already exsit')
+                
+            } else {
+
+                const shipper= new Shipper ({
+                    companyName:args.ShipperInput.companyName,
+                    shippingPrice:args.ShipperInput.shippingPrice,
+                    shippingMethod:args.ShipperInput.shippingMethod,
+                   
+                })
+    
+                return shipper.save();
+            }
+        } catch(error){
+            throw error
+        }
+    },
 
 
 

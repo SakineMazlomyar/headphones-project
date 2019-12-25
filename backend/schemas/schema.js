@@ -26,6 +26,13 @@ let schema = buildSchema (`
         username:String!
     }
 
+    type Shipper {
+        _id: ID!
+        companyName:String!
+        shippingPrice:Int!
+        shippingMethod:String!
+    }
+
    input ProductInput {
         productName: String!
         unitInStock:Int!
@@ -35,12 +42,22 @@ let schema = buildSchema (`
 
     input ProductDelete {
         _id: ID!
+        
     }
+
+
+    input ShipperInput {
+        companyName:String!
+        shippingPrice:Int!
+        shippingMethod:String!
+    }
+
 
     type RootQuery {
         users: [User!]!
         login(email: String!, password: String!): AuthData!
         products:[Product!]!
+        shippers:[Shipper!]!
       
 
     }
@@ -50,6 +67,7 @@ let schema = buildSchema (`
         createUser(UserInput:UserInput):User
         createProduct(ProductInput: ProductInput):Product
         deleteProduct(ProductDelete:ProductDelete):Product
+        createShipper(ShipperInput: ShipperInput):Shipper
 
     }
     schema {

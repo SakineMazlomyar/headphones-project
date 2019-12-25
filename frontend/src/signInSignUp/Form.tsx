@@ -1,6 +1,6 @@
 import React,{Component, CSSProperties} from 'react';
 import Axios from 'axios';
-
+import FormMall from './FormMall';
 interface CurrentUser {
   id:string,
   username:string
@@ -183,8 +183,8 @@ export default class Form extends Component<Props,State>{
 
     renderForm = ()=>{
         return (
-
-            <div style={formtStyle}>
+          <FormMall>
+          
             <h1>{this.state.isLoggedIn?'Sign In':'Sign Up!' }</h1>
               <label>Byt till {this.renderSignInSignUp()}</label>
 
@@ -200,7 +200,8 @@ export default class Form extends Component<Props,State>{
                  {this.renderUsername()}
               <input type="submit" value='Submit'/>
           </form>
-          </div>
+      
+          </FormMall>
 
         )
     }
@@ -225,19 +226,20 @@ export default class Form extends Component<Props,State>{
     }
 }
 
-const formtStyle: CSSProperties ={
-    display:"flex",
-    flexDirection:"column",
-    alignItems:"center",
-    margin:"auto",
-    width:"50%",
-    marginTop:"3em",
-    padding:"1em",
-    backgroundColor:"#d7e4c7"
-}
+
 const input: CSSProperties={
     margin:"1em"
 }
 
+const formtStyle: CSSProperties ={
+  display:"flex",
+  flexDirection:"column",
+  alignItems:"center",
+  margin:"auto",
+  width:"50%",
+  marginTop:"3em",
+  padding:"1em",
+  backgroundColor:"#d7e4c7"
+}
 
 

@@ -1,16 +1,14 @@
 import React from 'react';
-import CheckOut from '../checkOut/checkOut';
-import Form from '../signInSignUp/Form';
 
-interface P {
-    userInfo: {username:string, id:string}
-}
+import { RouteComponentProps } from 'react-router-dom';
+interface Props extends RouteComponentProps {}
+
 interface State {
   
     removed:boolean
 }
-export default class ShoppingCard extends React.Component<P, State>{
-    constructor(props:P){
+export default class ShoppingCard extends React.Component<Props, State>{
+    constructor(props:Props){
         super(props);
         this.state = {
         
@@ -38,7 +36,8 @@ export default class ShoppingCard extends React.Component<P, State>{
     getProductsFromShopingCard = ()=> {
         let shoppingCart:any = localStorage.getItem("shoppingcart");
         let parsedShoppingCart = JSON.parse(shoppingCart);
-        if(parsedShoppingCart.length > 0 ||this.state.removed === true){
+        if(parsedShoppingCart !== null && parsedShoppingCart.length > 0 ||this.state.removed === true){
+           
             return parsedShoppingCart.map((product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string })=>{
                 return <div 
                 className={"d-flex flex-column align-items-center backgroundOdd"}
@@ -59,14 +58,16 @@ export default class ShoppingCard extends React.Component<P, State>{
 
     /* check how to redirect user here  */
     goTOCheckOut = ()=>{
-        if(this.props.userInfo.username !== '') {
-            console.log(window.location.href)
-             
+       let current_user: any = localStorage.getItem('current_user');
+       let parsedCurrentUser = JSON.parse(current_user)
+      
+       if(current_user === null) {
          
+           this.props.history.push('SigninSignUp')
         } else {
-            
-           
-        }
+            this.props.history.push('checkOut')
+         
+       }
     }
 
 
