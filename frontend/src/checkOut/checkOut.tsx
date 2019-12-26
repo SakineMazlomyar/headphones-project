@@ -1,10 +1,10 @@
 import React,{Component, CSSProperties} from 'react';
 import Axios from 'axios';
 import FormMall from '../signInSignUp/FormMall';
-
+import { Link } from 'react-router-dom';
 interface Props {
 
-
+totalPrice:number
 }
 
 interface Shipper {
@@ -19,8 +19,8 @@ interface State{
     shippAdress:String,
     shippPostelCode:string,
     shipCity:String,
-    shipMail:String,
-    shipPhoneNo:String,
+    email:String,
+    tel:String,
     totalPrice:any,
     orderDate:String,
     createdOrder:string,
@@ -39,19 +39,24 @@ export default class CheckOut extends Component<Props,State>{
                 shippAdress:'',
                 shippPostelCode:'',
                 shipCity:'',
-                shipMail:'',
-                shipPhoneNo:'',
+                email:'',
+                tel:'',
                 totalPrice:0,
                 orderDate:'',
                 createdOrder:'',
-                selectedShipper:'',
+                selectedShipper:'5e03818e0ba8e433a8a60c55',
                 shippers:[]
         
         }
     }
 
     componentDidMount() {
-        this.getShipperMethods()
+        this.getShipperMethods();
+        let createdOrder = new Date().toISOString();
+        this.handleOrderDate(createdOrder);
+        this.handleOrderPrice();
+        this.handleCreatedOrder()
+        
     }
 
     getShipperMethods =async ()=> {
@@ -89,9 +94,12 @@ export default class CheckOut extends Component<Props,State>{
     }
 
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        event.preventDefault();
+      /* Check if createdOrder == '' then can not slutför ditt köpet else förtsätt */
+        console.log(this.state)
      
     }
+    
 
 
 
@@ -100,15 +108,42 @@ export default class CheckOut extends Component<Props,State>{
     handleAddresss= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({shippAdress:event.target.value }) }
     handleShipperPostalconde= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({shippPostelCode:event.target.value }) }
     handleShipperCity= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({shipCity:event.target.value }) }
-    handleEmail= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({shipMail:event.target.value }) }
-    handlePhone= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({shipPhoneNo:event.target.value }) }
-    handleOrderPrice= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({totalPrice:event.target.value }) }
-    handleOrderDate= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({orderDate:new Date().toISOString() }) }
-    handleCreatedOrder= (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({createdOrder:''}) }
-    
+    handleEmailAndPhone = (event: React.ChangeEvent<HTMLInputElement>)=>{ this.setState({[event.target.type]:event.target.value } as Pick<State, any>) }
+    handleOrderDate = (createdOrder:string)=>{ this.setState({orderDate:createdOrder}) }
     
 
+   
+    handleOrderPrice = ()=>{ 
+        let totalPrice = this.props.totalPrice;
 
+        let shoppingCart:any = localStorage.getItem("shoppingcart");
+        let parsedShoppingCart = JSON.parse(shoppingCart);
+
+            let initTolatlPrice = 0
+            for(let product of parsedShoppingCart) {
+                let price = product.unitPrice
+            
+                initTolatlPrice += price
+            }
+
+        console.log(initTolatlPrice)
+        let finalTotalPrice = totalPrice === 0?  initTolatlPrice: totalPrice
+        this.setState({totalPrice: finalTotalPrice}
+        
+    ) }
+
+    //Fix these inputs dynamic
+    handleCreatedOrder = ()=>{ 
+        let current_user :any = localStorage.getItem("current_user");
+        let parsedCurrentUser:any = JSON.parse(current_user);
+        if(current_user) {
+            this.setState({createdOrder:parsedCurrentUser.id})
+        }
+
+    }
+    handleSelectShipper = (event: any)=>{ this.setState({selectedShipper:event.target.value}) }
+
+    
     renderShippers = ()=>{
         if(this.state.shippers.length > 0) {
 
@@ -119,45 +154,42 @@ export default class CheckOut extends Component<Props,State>{
            
         }
     }
-
-    handleSelect = (event: any)=>{
-        console.log(event.target.value, 'choosen shipping method')
-        this.setState({selectedShipper:event.target.value})
-    }
-
    
     render(){
         return (
             <FormMall>
                 <h1>Here is kassan </h1>
+                <Link to={"/shoppingCard"}>
+                    <h5>Gå Tillbaka Tillbaka</h5>
+                </Link>
                 <form onSubmit={this.handleSubmit} style={formtStyle}>
                     <label><i className="fa fa-user"></i> Userrname</label>
-                    <input type="text" id="fname" name="firstname" placeholder="Sven" />
+                    <input type="text" id="fname" name="firstname" placeholder="Sven" onChange={this.handleFirstName} />
 
                     <label ><i className="fa fa-user"></i> Lastname</label>
-                    <input type="text" id="lname" name="lastname" placeholder="Svensson" />
+                    <input type="text" id="lname" name="lastname" placeholder="Svensson" onChange={this.handleLastName}/>
 
                     <label><i className="fa fa-envelope"></i> Email</label>
                     
-                    <input type="email" id="email" name="email" placeholder="john@example.com" />
+                    <input type="email" id="email" name="email" placeholder="john@example.com" onChange={this.handleEmailAndPhone }/>
                     <label><i className="fa fa-home"></i> Address</label>
-                    <input type="text" id="adr" name="address" placeholder="Svenssongatan 14a" />
+                    <input type="text" id="adr" name="address" placeholder="Svenssongatan 14a" onChange={this.handleAddresss} />
 
                     <label> City</label>
-                    <input type="text" id="city" name="city" placeholder="Goteborg" />
+                    <input type="text" id="city" name="city" placeholder="Goteborg" onChange={this.handleShipperCity}/>
 
                     <label><i className="fa fa-institution"></i> Postal code</label>
-                    <input type="text" id="postalcode" name="postalcode" placeholder="43350" />
+                    <input type="text" id="postalcode" name="postalcode" placeholder="43350" onChange={this.handleShipperPostalconde} />
 
                     <label> Phone</label>
-                    <input type="text" id="shipPhoneNO" name="shipPhoneNO" placeholder="1212" />
+                    <input type="tel" id="shipPhoneNO" name="shipPhoneNO" placeholder="1212" onChange={this.handleEmailAndPhone }/>
 
                     <label> Total Price In Sek</label>
-                    <input type="text" id="totalPrice" name="totalPrice" placeholder="0" />
-                    <select value={this.state.selectedShipper} onChange={this.handleSelect}>
+                    <h5>{this.state.totalPrice} kr</h5>
+                    <select value={this.state.selectedShipper} onChange={this.handleSelectShipper}>
                         {this.renderShippers()}
                     </select>
-              <input type="submit" value='Submit'/>
+              <input type="submit" value='Slutföra Ditt Köp'/>
           </form>
         </FormMall>
 

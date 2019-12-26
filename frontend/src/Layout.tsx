@@ -6,18 +6,27 @@ interface CurrentUser {
     username:string
 }
 interface State {
-    current_user:CurrentUser
+    current_user:CurrentUser,
+    amount:number,
+    totalPrice:number
+  
 }
 interface Props {
 
 }
 export default class Layout extends React.Component<Props, State>{
+  
     constructor(props:Props){
         super(props);
             this.state = { 
-            current_user:{id:'', username:''}
+            current_user:{id:'', username:''},
+            amount:0,
+            totalPrice:0
+           
         
         }
+
+  
     }
 
     componentDidMount(){
@@ -65,12 +74,27 @@ export default class Layout extends React.Component<Props, State>{
         return ''
       }
 
+      getAddedProducts = (products:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>{
+     
+        //return products
+        let initTolatlPrice = 0
+        for(let product of products) {
+            let price = product.unitPrice
+         
+            initTolatlPrice += price
+        }
+        this.setState({amount:products.length, totalPrice:initTolatlPrice}, ()=>{console.log(this.state.totalPrice)})
+
+    }
+
+
+
     render(){
         return(
                 
             <div>
-                <Navbar signedInUser={this.renderCurrentSignedInUser} />
-                <ViewContainer signedInUser={this.checkForUser} userInfo={this.state.current_user}/>
+                <Navbar signedInUser={this.renderCurrentSignedInUser} amount={this.state.amount}/>
+                <ViewContainer signedInUser={this.checkForUser} userInfo={this.state.current_user} getAddedProducts={this.getAddedProducts} totalPrice={this.state.totalPrice}/>
             </div>
             
         )

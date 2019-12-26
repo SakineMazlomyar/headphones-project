@@ -1,7 +1,9 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router-dom';
-interface Props extends RouteComponentProps {}
+interface Props {
+    getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void
+}
 
 interface State {
   
@@ -29,8 +31,9 @@ export default class ShoppingCard extends React.Component<Props, State>{
         })
        
         localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart ))
-        this.setState({removed: true})
-        alert('Du tog bort en item!')
+        this.setState({removed: true});
+        this.props.getAddedProducts(parsedShoppingCart);
+        alert('Du tog bort en item!');
     }
 
     getProductsFromShopingCard = ()=> {
@@ -56,26 +59,15 @@ export default class ShoppingCard extends React.Component<Props, State>{
         }
     }
 
-    /* check how to redirect user here  */
-    goTOCheckOut = ()=>{
-       let current_user: any = localStorage.getItem('current_user');
-       let parsedCurrentUser = JSON.parse(current_user)
-      
-       if(current_user === null) {
-         
-           this.props.history.push('SigninSignUp')
-        } else {
-            this.props.history.push('checkOut')
-         
-       }
-    }
-
+  
 
     render(){
         return(
                 
             <div>
-                <button onClick={this.goTOCheckOut}>Gå vidare till kassan</button>
+                <Link to={"/checkOut"}>
+                    <span>Gå Vidare Till Kassan</span>
+                </Link>
 
             <div  className={"container-fluid"}>
                 <h1>Here is shopping card</h1>

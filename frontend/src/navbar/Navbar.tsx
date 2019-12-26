@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './navbar.css'
 interface Props{
-    signedInUser:()=>any
+    signedInUser:()=>any,
+    amount:number
 }
 
 interface State{
@@ -14,6 +15,18 @@ export default class Navbar extends React.Component<Props, State>{
         this.state = {
 
         }
+    }
+
+    getLegthOfProducts = ()=>{
+      let shoppingCart:any = localStorage.getItem("shoppingcart");
+      if(shoppingCart !== null) {
+
+        let parsedShoppingCart = JSON.parse(shoppingCart);
+        let amount = this.props.amount !== 0 ? this.props.amount : parsedShoppingCart.length
+        console.log(amount)
+        return amount
+      }
+      
     }
     
 
@@ -61,7 +74,8 @@ export default class Navbar extends React.Component<Props, State>{
         </form>
         <h4  className="nav-item">
             <Link to={"/shoppingCard"}>
-                <span  className="fas fa-shopping-cart text-black navbar-text nav-link kundVagnWidth"> kundvagn</span>
+              
+          <span  className="fas fa-shopping-cart text-black navbar-text nav-link kundVagnWidth"> kundvagn {this.getLegthOfProducts()}</span>
             </Link>
           </h4>
         </div>

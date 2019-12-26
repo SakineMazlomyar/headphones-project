@@ -99,9 +99,10 @@ export default class ProductPage extends React.Component<Props, State> {
         
         let shoppingCart:any = localStorage.getItem("shoppingcart");
         let parsedShoppingCart = JSON.parse(shoppingCart);
-        parsedShoppingCart.push(product)
-        localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart))
-        this.props.getAddedProducts(parsedShoppingCart)
+        parsedShoppingCart.push(product);
+        localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart));
+        this.props.getAddedProducts(parsedShoppingCart);
+        alert('Du laggt till en produkt!')
 
     }
     viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number})=>{
