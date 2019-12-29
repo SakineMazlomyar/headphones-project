@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router-dom';
+import  './shoppingCard.css';
 interface Props {
     getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void
 }
@@ -47,9 +48,9 @@ export default class ShoppingCard extends React.Component<Props, State>{
                
                 >
                              <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
-                             <h2> Produkt Namn: {product.productName}</h2>
-                             <h3>Produkt priset: {product.unitPrice}</h3>
-                             <h4>Produkt quentity: {product.unitInStock}</h4>
+                             <h4>{product.productName}</h4>
+                             <h4>{product.unitPrice}</h4>
+                             <span>{1}</span>
                              <button onClick={()=> this.removeItem(product)}>Remove</button>
                             
                            </div>
@@ -69,8 +70,8 @@ export default class ShoppingCard extends React.Component<Props, State>{
                     <span>Gå Vidare Till Kassan</span>
                 </Link>
 
-            <div  className={"container-fluid"}>
                 <h1>Here is shopping card</h1>
+            <div  className={"container-fluid "} >
                 {this.getProductsFromShopingCard()}
             </div>
             </div>

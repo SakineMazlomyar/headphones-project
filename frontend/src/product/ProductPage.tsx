@@ -14,7 +14,9 @@ interface Product {
     pictureUrl:string
 }
 interface State {
-    products:Product[]
+    products:Product[],
+    viewProduct:boolean,
+    choosenProduct:Product
 }
 export default class ProductPage extends React.Component<Props, State> {
   //private pictures: string[]
@@ -22,7 +24,9 @@ export default class ProductPage extends React.Component<Props, State> {
     constructor(props:Props){
         super(props);
             this.state ={ 
-            products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:""}]
+            products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:""}],
+            viewProduct:false,
+            choosenProduct:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:""}
           
         
         }
@@ -75,23 +79,25 @@ export default class ProductPage extends React.Component<Props, State> {
     }
    
     renderProducts= ()=> {
-        if(this.state.products.length > 1) {
-           return  this.state.products.map((product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string})=>{
+        if(this.state.products.length > 1 && this.state.viewProduct === false) {
+           let products =  this.state.products.map((product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string})=>{
             
             
                     
-             return   <div 
-             className={"d-flex flex-column align-items-center backgroundOdd"}
-            
-             >
-                          <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
-                          <h2> Produkt Namn: {product.productName}</h2>
-                          <h3>Produkt priset: {product.unitPrice}</h3>
-                          <h4>Produkt quentity: {product.unitInStock}</h4>
-                          <button onClick={()=> this.addProduct(product)}>Lägg i Varukorg!</button>
-                          <button onClick={()=> this.viewProduct(product)}>View Product!</button>
-                        </div>
+             return   <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
+              <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
+              <h6>{product.productName}</h6>
+              <h6>{product.unitPrice+" SEK"}</h6>
+              <h6>Produkt quentity: {product.unitInStock}</h6>
+              <button onClick={()=> this.addProduct(product)}>Lägg i Varukorg!</button>
+              <button onClick={()=> this.viewProduct(product)}>View Product!</button>
+            </div>
             })
+
+
+            return <div className={"container-fluid d-flex flex-column  "}> 
+                      {products}
+                  </div>
         }
     }
 
@@ -105,8 +111,26 @@ export default class ProductPage extends React.Component<Props, State> {
         alert('Du laggt till en produkt!')
 
     }
-    viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number})=>{
-        console.log(product)
+    viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string})=>{
+      this.setState({
+        viewProduct:true,
+        choosenProduct: product
+      
+      })
+     
+    }
+
+    viewOnProduct = ()=>{
+      if(this.state.viewProduct) {
+        return <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
+        <h4 id="link" onClick={()=> this.setState({viewProduct:false}) }>Gå back till produkts sida!</h4>
+        <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${this.state.choosenProduct.pictureUrl}`} alt={this.state.choosenProduct.productName}/>
+        <h6>{this.state.choosenProduct.productName}</h6>
+        <h6>{this.state.choosenProduct.unitPrice+" SEK"}</h6>
+        <h6>Produkt quentity: {this.state.choosenProduct.unitInStock}</h6>
+        <button onClick={()=> this.addProduct(this.state.choosenProduct)}>Lägg i Varukorg!</button>
+      </div>
+      }
     }
 
 
@@ -115,9 +139,10 @@ export default class ProductPage extends React.Component<Props, State> {
 
     render(){
         return(
-          <div className={"container-fluid"}> 
-               {this.renderProducts()}
-            </div>
+          <div>
+            {this.renderProducts()}
+            {this.viewOnProduct()}
+          </div>
             
         )
     }
