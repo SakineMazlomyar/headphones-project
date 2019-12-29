@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "backend": "cd backend && nodemon index.js",
+    "backend": "nodemon index.js",
     "frontend": "cd frontend &&  npm start",
     "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\""
   },
@@ -31,6 +31,7 @@
     "mongoose": "^5.8.2",
     "nodemon": "^2.0.1",
     "path": "^0.12.7",
+    "paypal-rest-sdk": "^1.8.1",
     "underscore": "^1.9.1"
   }
 }

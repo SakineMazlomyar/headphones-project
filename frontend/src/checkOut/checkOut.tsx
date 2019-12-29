@@ -2,9 +2,16 @@ import React,{Component, CSSProperties} from 'react';
 import Axios from 'axios';
 import FormMall from '../signInSignUp/FormMall';
 import { Link } from 'react-router-dom';
+import { threadId } from 'worker_threads';
+interface CurrentUser {
+    id:string,
+    username:string
+}
+
 interface Props {
 
-totalPrice:number
+totalPrice:number,
+userInfo:CurrentUser
 }
 
 interface Shipper {
@@ -55,11 +62,11 @@ export default class CheckOut extends Component<Props,State>{
         let createdOrder = new Date().toISOString();
         this.handleOrderDate(createdOrder);
         this.handleOrderPrice();
-        this.handleCreatedOrder()
-        
+        //this.handleCreatedOrder()
+       
     }
 
-    getShipperMethods =async ()=> {
+    getShipperMethods = async ()=> {
         let requestBody = {query:`
             { shippers {
             _id
@@ -67,9 +74,7 @@ export default class CheckOut extends Component<Props,State>{
             shippingPrice,
             companyName
             }
-        }
-        `
-        };
+        }`};
         
         try  {
           let res = await Axios({
@@ -82,21 +87,72 @@ export default class CheckOut extends Component<Props,State>{
             })
             
           let actuResponse = await res.data;
-          console.log(actuResponse)
+          console.log(actuResponse, 'here is shippers')
           actuResponse.data.shippers !== false ? this.setState({shippers: actuResponse.data.shippers},()=>{console.log(this.state.shippers, 'here is test')}): this.setState({shippers:[]})
           
-        
-
         } catch(err){
           //alert('Could not get all Products!')
            console.log("Error at getting shippers"+err)
         }
     }
 
-    handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
+    handleSubmit=  (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-      /* Check if createdOrder == '' then can not slutför ditt köpet else förtsätt */
-        console.log(this.state)
+       this.setState({createdOrder:this.props.userInfo.id}, async()=>{
+  
+           if(this.state.createdOrder === '') {
+               alert('Sign in först')
+           } else { 
+          
+             let shoppingCart:any = localStorage.getItem("shoppingcart");
+             let parsedShoppingCart = JSON.parse(shoppingCart);
+             let productIds:string[] = [];
+             let choosenProducts = parsedShoppingCart.map((item:{ productName: string, _id:string, unitPrice: number, unitInStock: number, pictureUrl:string})=>{
+                 productIds.push(item._id)
+                     
+                 return {"name":item.productName, "sku":"item", "price":item.unitPrice.toString() +'.'+'00', "currency":"SEK", "quantity":1}
+             })
+     
+     
+               let current_order = {
+                  items:choosenProducts,
+                  productIds:productIds,
+                  shipFirstName:this.state.shipFirstName,
+                  shipLastName:this.state.shipLastName,
+                  shippAdress:this.state.shippAdress,
+                  shippPostelCode:this.state.shippPostelCode,
+                  shipCity:this.state.shipCity,
+                  email:this.state.email,
+                  tel:this.state.tel,
+                  totalPrice:this.state.totalPrice,
+                  orderDate:this.state.orderDate,
+                  createdOrder:this.state.createdOrder,
+                  selectedShipper:this.state.selectedShipper,
+                 }
+                 console.log(current_order, 'oneOrder')
+             try  {
+               let res = await Axios({
+                   url:'/pay2',
+                   method: 'POST',
+                   data: JSON.stringify(current_order),
+                   headers: {
+                     'Content-Type': 'application/json'
+                   }
+                 })
+                 
+               let actuResponse = await res.data;
+               window.location.assign(actuResponse.url)
+               console.log(actuResponse)
+             
+               
+             } catch(err){
+               //alert('Could not get all Products!')
+                console.log("Error at posting orders"+err)
+             }
+     
+     
+           }
+       })
      
     }
     
@@ -132,15 +188,6 @@ export default class CheckOut extends Component<Props,State>{
         
     ) }
 
-    //Fix these inputs dynamic
-    handleCreatedOrder = ()=>{ 
-        let current_user :any = localStorage.getItem("current_user");
-        let parsedCurrentUser:any = JSON.parse(current_user);
-        if(current_user) {
-            this.setState({createdOrder:parsedCurrentUser.id})
-        }
-
-    }
     handleSelectShipper = (event: any)=>{ this.setState({selectedShipper:event.target.value}) }
 
     

@@ -50,7 +50,7 @@ export default class ViewContainer extends React.Component<Props, State>{
                 <Route path="/contact" component={ContactPage}/>
                 <Route path="/SigninSignUp" render={()=> <Form signedInUser={this.props.signedInUser} userInfo={this.props.userInfo}/>} />
                 <Route path="/shoppingCard" render={ ()=> <ShoppingCard  getAddedProducts={this.props.getAddedProducts}/> }/>
-                <Route path="/checkOut" render={()=><CheckOut totalPrice={this.props.totalPrice}/>}/>
+                <Route path="/checkOut" render={()=><CheckOut totalPrice={this.props.totalPrice} userInfo={this.props.userInfo}/>}/>
 
             </React.Fragment>
         </Switch>

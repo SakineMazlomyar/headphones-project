@@ -23,7 +23,6 @@ export default class Navbar extends React.Component<Props, State>{
 
         let parsedShoppingCart = JSON.parse(shoppingCart);
         let amount = this.props.amount !== 0 ? this.props.amount : parsedShoppingCart.length
-        console.log(amount)
         return amount
       }
       

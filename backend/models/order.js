@@ -17,7 +17,7 @@ const order = new Schema({
         required:true
     }, 
     shippPostelCode:{
-        type:Number,
+        type:String,
         required:true
     },
     shipCity:{

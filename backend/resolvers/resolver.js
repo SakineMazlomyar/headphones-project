@@ -1,11 +1,32 @@
 const User = require('../models/user');
 const Product = require('../models/product');
 const Shipper = require('../models/shipper');
+const Order = require('../models/order');
 const bcrypt = require('bcryptjs');
+
+const findUser = async (userId) => {
+    try {
+        let u = await User.findById(userId)
+        let relU = await u;
+        console.log(relu, 'here is user')
+        return {...relU._doc, _id:relU.id}
+    } catch(error) {
+        throw new Error('Error at getting specefic user' + error)
+    }
+}
+
+
+
+
 const  Root ={
     
     users :()=>{
-        return User.find();
+        try {
+
+            return User.find();
+        }catch(error) {
+            throw new Error('Error at finding all users '+ error)
+        }
     },
     createUser: (args) => {
         return User.findOne({email:args.UserInput.email}).then((user)=>{
@@ -55,7 +76,12 @@ const  Root ={
   },
 
     products :()=>{
-        return Product.find();
+        try {
+
+            return Product.find();
+        } catch(error) {
+            throw new Error('Error at finding all product '+ error)
+        }
     },
 
     createProduct: async (args) => {
@@ -82,16 +108,26 @@ const  Root ={
             throw error
         }
     },
-    deleteProduct: async (args)=>{
-        let foundProduct = await Product.findOne({_id:args.ProductDelete._id})
-        let acFoundProduct = await foundProduct;
-        if(!acFoundProduct){
-            throw new Error ('Product does not exist!')
+    deleteProduct: async (args) => {
+        try {
+            
+            let foundProduct = await Product.findOne({_id:args.ProductDelete._id})
+            let acFoundProduct = await foundProduct;
+            if(!acFoundProduct){
+                throw new Error ('Product does not exist!')
+            }
+            return Product.deleteOne({_id:args.ProductDelete._id})
+        } catch (error){
+            throw new Error ('Error at delete product' + error)
         }
-        return Product.deleteOne({_id:args.ProductDelete._id})
     },
     shippers :()=>{
-        return Shipper.find();
+        try {
+
+            return Shipper.find();
+        } catch(error) {  
+            throw new Error ('Error finding shippers' + error)
+        }
     },
     createShipper: async (args) => {
         try {
@@ -114,9 +150,52 @@ const  Root ={
                 return shipper.save();
             }
         } catch(error){
-            throw error
+            throw  new Error("Error at creating new shipper " + error)
         }
     },
+
+    orders:()=>{
+        try {
+            return Order.find();
+
+        } catch(error){
+            throw new Error("Error at geting all orders")
+        }
+    },
+
+    createOrder: async (args)=> {
+        try {
+
+            let user = await User.findById(args.OrderInput.createdOrder);
+            let relUser = await user
+            console.log(typeof user)
+            if(!relUser ) {
+                throw new Error('This user does not exist!')
+                
+            } else {
+
+                const order= new Order ({
+                    shipFirstName:args.OrderInput.shipFirstName,
+                    shipLastName:args.OrderInput.shipLastName,
+                    shippAdress:args.OrderInput.shippAdress,
+                    shippPostelCode:args.OrderInput.shippPostelCode,
+                    shipCity:args.OrderInput.shipCity,
+                    shipMail:args.OrderInput.shipMail,
+                    shipPhoneNo:args.OrderInput.shipPhoneNo,
+                    totalPrice:args.OrderInput.totalPrice,
+                    orderDate:args.OrderInput.orderDate,
+                    createdOrder:findUser.bind(this,args.OrderInput.createdOrder),
+                    selectedShipper:args.OrderInput.selectedShipper
+                   
+                })
+                relUser.orders.push(order);
+                order.save();
+                return user.save()
+            }
+        } catch(error){
+            throw  new Error("Error at creating new order" + error)
+        }
+    }
 
 
 

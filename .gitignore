@@ -2,3 +2,5 @@
 /frontend/node_modules
 
 /backend/connection.js
+/backend/keys.js
+/backend/secret.js
