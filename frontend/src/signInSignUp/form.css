@@ -1,0 +1,43 @@
+
+
+.itemOrderContainer {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+.itemOrderContainer:nth-child(odd) {
+    background-color: rgb(216, 216, 216);
+}
+.itemOrderContainer:nth-child(even) {
+    background-color:white;
+}
+
+.img-order{
+    width:25%
+}
+
+.orderButton {
+    width:30%;
+    background-color: green;
+
+}
+
+.orderContainer {
+    display: flex;
+    flex-direction: column;
+
+}
+.formStyle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    width: 50%;
+    margin-top: 3em;
+    padding:1em;
+    background-color: #d7e4c7;
+}
+
+.inputStyle {
+    margin:1em
+}

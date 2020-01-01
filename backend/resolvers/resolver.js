@@ -221,6 +221,24 @@ const  Root ={
         } catch(error) {
             throw new Error("Error at getting order details "+ error)
         }
+    },
+    getSpeceficShipper: async ({_id})=>{
+        try {
+           
+            let shipper = await Shipper.findById(_id);
+            let relShipper = await shipper;
+            //console.log(relUser)
+         
+            if(!relShipper ) {
+                throw new Error('We chould not fin this specefic shipper')
+                
+            } else {
+    
+            return relShipper
+            }
+        } catch(error){
+            throw  new Error("Error at finding specefic shipper" + error)
+        }
     }
 
 

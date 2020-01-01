@@ -106,6 +106,7 @@ let schema = buildSchema (`
         orders:[Order!]!
         getSpeceficOrder(_id:ID!):[Order!]!
         getSpeceficOrderDetails(_id:ID!): [Producttr!]!
+        getSpeceficShipper(_id:ID!):Shipper!
       
     }
     
