@@ -98,7 +98,7 @@ app.get('/success',(req,res)=> {
     console.log(currentData)
     let paymentId= req.query.paymentId;
     let payerId = req.query.PayerID;
-
+ 
     var execute_payment_json = {
         "payer_id": payerId,
         "transactions": [{
@@ -151,9 +151,10 @@ app.get('/success',(req,res)=> {
                                 orderId: tr._id, 
                                 productIds : currentData.productIds
                             })
-
-                            let createdOrderDe = await orderDetails.save();
+                            let th = orderDetails.save();
+                            let createdOrderDe = await th
                             let relCreatedOrderDe = await createdOrderDe;
+                            console.log(relCreatedOrderDe)
                             res.send('Your order created successfully close this page!')
 
                          }

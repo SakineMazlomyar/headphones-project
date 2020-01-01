@@ -89,8 +89,7 @@ export default class ProductPage extends React.Component<Props, State> {
               <h6>{product.productName}</h6>
               <h6>{product.unitPrice+" SEK"}</h6>
               <h6>Produkt quentity: {product.unitInStock}</h6>
-              <button onClick={()=> this.addProduct(product)}>Lägg i Varukorg!</button>
-              <button onClick={()=> this.viewProduct(product)}>View Product!</button>
+              <button id="viewButton" onClick={()=> this.viewProduct(product)}>View Product!</button>
             </div>
             })
 
@@ -122,13 +121,15 @@ export default class ProductPage extends React.Component<Props, State> {
 
     viewOnProduct = ()=>{
       if(this.state.viewProduct) {
-        return <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
-        <h4 id="link" onClick={()=> this.setState({viewProduct:false}) }>Gå back till produkts sida!</h4>
-        <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${this.state.choosenProduct.pictureUrl}`} alt={this.state.choosenProduct.productName}/>
-        <h6>{this.state.choosenProduct.productName}</h6>
-        <h6>{this.state.choosenProduct.unitPrice+" SEK"}</h6>
-        <h6>Produkt quentity: {this.state.choosenProduct.unitInStock}</h6>
-        <button onClick={()=> this.addProduct(this.state.choosenProduct)}>Lägg i Varukorg!</button>
+        return <div>
+        <h4 id="link" onClick={()=> this.setState({viewProduct:false}) }>Gå tillbaka till produkts sida!</h4>
+        <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
+          <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${this.state.choosenProduct.pictureUrl}`} alt={this.state.choosenProduct.productName}/>
+          <h6>{this.state.choosenProduct.productName}</h6>
+          <h6>{this.state.choosenProduct.unitPrice+" SEK"}</h6>
+          <h6>Produkt quentity: {this.state.choosenProduct.unitInStock}</h6>
+          <button id="addButton"onClick={()=> this.addProduct(this.state.choosenProduct)}>Lägg i Varukorg!</button>
+        </div>
       </div>
       }
     }

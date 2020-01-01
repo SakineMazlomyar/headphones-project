@@ -14,14 +14,16 @@
 }
 
 .img{
-    width: 35%;
+    width:25%;
 }
 
-Button {
+#viewButton, #addButton {
     width:50%;
     background-color: rgb(22, 155, 22);
 }
 
 #link{
-    color:blue
+    color: rgba(0,0,0,.5);
+    
 }
+

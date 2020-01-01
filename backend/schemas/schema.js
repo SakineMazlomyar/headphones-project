@@ -14,6 +14,14 @@ let schema = buildSchema (`
         unitPrice:Int!
         pictureUrl:String!
     }
+    type Producttr {
+        _id: ID!
+        productName: String!
+        unitInStock:Int!
+        unitPrice:Int!
+        pictureUrl:String!
+        counted:Int!
+    }
     
     input UserInput {
         email:String!
@@ -39,7 +47,7 @@ let schema = buildSchema (`
         shipFirstName: String!
         shipLastName: String!
         shippAdress: String!
-        shippPostelCode: Int!
+        shippPostelCode: String!
         shipCity: String!
         shipMail: String!
         shipPhoneNo: String!
@@ -47,8 +55,12 @@ let schema = buildSchema (`
         orderDate: String!
         createdOrder: String!
         selectedShipper: String!
+        createdAt: String!
+        updatedAt: String!
         
     }
+
+  
 
    input ProductInput {
         productName: String!
@@ -84,12 +96,16 @@ let schema = buildSchema (`
 
     }
 
+    
+
     type RootQuery {
         users: [User!]!
         login(email: String!, password: String!): AuthData!
         products:[Product!]!
         shippers:[Shipper!]!
         orders:[Order!]!
+        getSpeceficOrder(_id:ID!):[Order!]!
+        getSpeceficOrderDetails(_id:ID!): [Producttr!]!
       
     }
     

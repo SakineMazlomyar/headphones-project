@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Product = require('../models/product');
 const Shipper = require('../models/shipper');
 const Order = require('../models/order');
+const OrderDetails = require('../models/orderDetails');
 const bcrypt = require('bcryptjs');
 
 const findUser = async (userId) => {
@@ -163,37 +164,62 @@ const  Root ={
         }
     },
 
-    createOrder: async (args)=> {
+    getSpeceficOrder: async ({_id})=> {
         try {
-
-            let user = await User.findById(args.OrderInput.createdOrder);
-            let relUser = await user
-            console.log(typeof user)
+           
+            let user = await User.findById(_id);
+            let relUser = await user;
+            //console.log(relUser)
+         
             if(!relUser ) {
-                throw new Error('This user does not exist!')
+                throw new Error('This user does not exist while searching order for this user!')
                 
             } else {
-
-                const order= new Order ({
-                    shipFirstName:args.OrderInput.shipFirstName,
-                    shipLastName:args.OrderInput.shipLastName,
-                    shippAdress:args.OrderInput.shippAdress,
-                    shippPostelCode:args.OrderInput.shippPostelCode,
-                    shipCity:args.OrderInput.shipCity,
-                    shipMail:args.OrderInput.shipMail,
-                    shipPhoneNo:args.OrderInput.shipPhoneNo,
-                    totalPrice:args.OrderInput.totalPrice,
-                    orderDate:args.OrderInput.orderDate,
-                    createdOrder:findUser.bind(this,args.OrderInput.createdOrder),
-                    selectedShipper:args.OrderInput.selectedShipper
-                   
-                })
-                relUser.orders.push(order);
-                order.save();
-                return user.save()
+          
+        
+            let orders = await Order.find({ "_id": { "$in":relUser.orders } } );
+            let relOrders = await orders
+            
+            return relOrders
             }
         } catch(error){
-            throw  new Error("Error at creating new order" + error)
+            throw  new Error("Error at finding order for specefic user" + error)
+        }
+    },
+    getSpeceficOrderDetails: async ({_id})=>{
+        try {
+
+            let orderDetail = await OrderDetails.findOne({orderId:_id});
+            let relOrderDetail = await orderDetail;
+        
+            if(!relOrderDetail ) {
+                throw new Error('This shipper id doest not exist or somethig else went wrong!')
+                
+            } else {
+        
+            let count = {};
+            relOrderDetail.productIds.forEach(function(i) { 
+                count[i] = (count[i]||0) + 1
+            
+            });
+            let product = await Product.find({ "_id": { "$in":relOrderDetail.productIds } } );
+            let relProduct = await product
+           
+            let addedCoundPro = relProduct.map((pr)=>{
+                
+                for(rt in count ) {
+                  
+                    if(`"${pr._id}"` == `"${rt}"`) {
+                        
+                    return {productName: pr.productName, unitInStock:pr.unitInStock, unitPrice:pr.unitPrice, pictureUrl:pr.pictureUrl, counted:count[rt]}
+                    }
+                }
+            })
+            
+            return addedCoundPro
+            }
+        } catch(error) {
+            throw new Error("Error at getting order details "+ error)
         }
     }
 

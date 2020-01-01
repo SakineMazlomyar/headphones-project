@@ -1,6 +1,7 @@
 import React,{Component, CSSProperties} from 'react';
 import Axios from 'axios';
 import FormMall from './FormMall';
+import ShoppingCard from '../shoppingCard/shoppingCard';
 interface CurrentUser {
   id:string,
   username:string
@@ -12,14 +13,41 @@ interface Props {
     userInfo: CurrentUser
 
 }
+interface  Order {
+    _id:string,
+    shipFirstName: string,
+    shipLastName: string,
+    shippAdress: string,
+    shippPostelCode: string,
+    shipCity: string,
+    shipMail: string,
+    shipPhoneNo: string,
+    totalPrice: number,
+    orderDate: string,
+    createdOrder: string,
+    selectedShipper: string,
+    createdAt: string,
+    updatedAt: string
+    
+}
 
+interface Product {
+    _id: string,
+    productName:string,
+    unitInStock: number,
+    unitPrice: number,
+    pictureUrl: string,
+    counted:number
+}
 interface State{
     email:string,
     password:string,
     isLoggedIn:boolean,
     text:string,
     signOut: boolean,
-    current_user:string
+    current_user:string,
+    current_orders:Order[],
+    current_orders_products:{id:string, products:Product[]}
  
 
 }
@@ -34,7 +62,9 @@ export default class Form extends Component<Props,State>{
             isLoggedIn:false,
             text:'',
             signOut:false,
-            current_user:''
+            current_user:'',
+            current_orders:[],
+            current_orders_products:{id:'', products:[]}
           
         
         }
@@ -173,12 +203,64 @@ export default class Form extends Component<Props,State>{
         return '';
 
       } else {
-        return (
-        <label htmlFor="text">
-            Ange ditt nam: <input type="text"  placeholder="name" onChange={this.handleOnChange} value={this.state.text} required/>
-        </label>
-        )
+        return ( <input style={inputStyle} type="text"  placeholder="name" onChange={this.handleOnChange} value={this.state.text} required/>)
       }
+    }
+
+    getCurrentOrders = async ()=> {
+    if(this.props.userInfo.id !== '') {
+    
+      let requestBody = {
+          query: `
+          {
+            getSpeceficOrder(_id: "${this.props.userInfo.id}") {
+              _id
+              shipFirstName
+              shipLastName
+              shippAdress
+              shippPostelCode
+              shipCity
+              shipMail
+              shipPhoneNo
+              totalPrice
+              orderDate
+              createdOrder
+              selectedShipper
+              createdAt
+              updatedAt
+            }
+          }
+          
+          `
+        };
+  
+        try  {
+          let res = await Axios({
+              url:'/graphql',
+              method: 'POST',
+              data: JSON.stringify(requestBody),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            
+            let actuResponse = await res.data;
+          
+          
+          if (res.status !== 200) {
+              //When user insert wrong info we send it catch
+              throw new Error('Request Failed at getting this order'+ res.status)
+          } else {
+            actuResponse.data.getSpeceficOrder !== null || actuResponse.data.getSpeceficOrder !== undefined ? this.setState({current_orders:actuResponse.data.getSpeceficOrder},()=>console.log(this.state.current_orders)):this.setState({current_orders:[]})
+            
+          }
+  
+  
+        } catch(err){
+           console.log("Error at getting current order "+err)
+        }
+
+    }
     }
 
     renderForm = ()=>{
@@ -189,14 +271,10 @@ export default class Form extends Component<Props,State>{
               <label>Byt till {this.renderSignInSignUp()}</label>
 
           <form onSubmit={this.handleSubmit} style={formtStyle}>
-              <label htmlFor="text" style={input}>
-                  Ange ditt email: 
-                  <input type="email"  placeholder='email' onChange={this.handleOnChange} value={this.state.email}  required/>
-              </label>
-              
-              <label htmlFor="text">
-                  Ange ditt password: <input type="password"  placeholder="password" onChange={this.handleOnChange} value={this.state.password} required/>
-              </label>
+           
+                  <input style={inputStyle} type="email"  placeholder='email' onChange={this.handleOnChange} value={this.state.email}  required/>
+                  <input style={inputStyle} type="password"  placeholder="password" onChange={this.handleOnChange} value={this.state.password} required/>
+            
                  {this.renderUsername()}
               <input type="submit" value='Submit'/>
           </form>
@@ -206,9 +284,99 @@ export default class Form extends Component<Props,State>{
         )
     }
 
+    showOrderDetails = async (id:string) => {
+      if(this.props.userInfo.id !== '') {
+    
+        let requestBody = {
+            query: `
+            {
+              getSpeceficOrderDetails(_id: "${id}") {
+                productName
+                pictureUrl
+                unitInStock
+                unitPrice
+                counted
+                
+              }
+            }
+            
+            `
+          };
+    
+          try  {
+            let res = await Axios({
+                url:'/graphql',
+                method: 'POST',
+                data: JSON.stringify(requestBody),
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+              
+              let actuResponse = await res.data;
+            
+            
+            if (res.status !== 200) {
+                //When user insert wrong info we send it catch
+                throw new Error('Request Failed at getting this order'+ res.status)
+            } else {
+              console.log(actuResponse, 'here is orderDetails')
+             actuResponse.data.getSpeceficOrderDetails !== null || actuResponse.data.getSpeceficOrderDetails  !== undefined ? this.setState({current_orders_products: {id:id, products:actuResponse.data.getSpeceficOrderDetails}},()=>console.log(this.state.current_orders_products)):this.setState({current_orders_products:{id:'', products:[]}})
+              
+            }
+    
+    
+          } catch(err){
+             console.log("Error at getting current order "+err)
+          }
+  
+      }
+
+    }
+    showCurrentOrderProduct = ()=>{
+        if(this.state.current_orders_products.products.length > 0) {
+            return this.state.current_orders_products.products.map((product)=>{
+                console.log(product, 'here is pro')
+                return <ul style={orderStyle}>
+            <li>{product.productName}</li>
+            <li>{product.unitPrice+ "SEK"}</li>
+            <li>total-köpt: {product.counted}</li>
+            <img style={productImgSize}className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
+                </ul>
+            })
+        }
+    }
+    showChoosenShipper = (id:string)=>{
+        console.log(id)
+    }
+    displayCurrentOrder = ()=>{
+        if(this.state.current_orders.length > 0) {
+            return this.state.current_orders.map((order)=>{
+            return <ul style={orderStyle}>
+                        Ett Besällning: 
+                        <li>Namn: {order.shipFirstName}</li>
+                        <li>Efternamn: {order.shipLastName}</li>
+                        <li>Address: {order.shippAdress} Postnummer: {order.shippPostelCode} Stad: {order.shipCity}</li>
+                        <li>Mail: {order.shipMail}</li>
+                        <li>Tel: {order.shipPhoneNo}</li>
+                        <li>Datum: {order.orderDate}</li>
+                        <button style={orderButton} onClick={()=> this.showOrderDetails(order._id)}>Visa order details</button>
+                        <div>{this.state.current_orders_products.id === order._id ? this.showCurrentOrderProduct():''}</div>
+                        <button  style={orderButton} onClick={()=> this.showChoosenShipper(order.selectedShipper)}>Visa valt frakt</button>
+                 </ul>
+            })
+        }
+    }
     renderCurrentUserInfo = ()=>{
       if(this.props.userInfo.id !== '') {
-        return <h1>Here is current orders</h1>
+        return (<div style={orderContainer}>
+
+                 <button style={orderButton}onClick={this.getCurrentOrders}>Visa Alla Beställningar </button>
+                 <div  style={orderContainer}>
+                    {this.displayCurrentOrder()}
+                 </div>
+             
+            </div>)
       } else {
         return this.renderForm()
       }
@@ -227,10 +395,10 @@ export default class Form extends Component<Props,State>{
 }
 
 
-const input: CSSProperties={
-    margin:"1em"
-}
 
+const inputStyle: CSSProperties = {
+  margin:"1em"
+}
 const formtStyle: CSSProperties ={
   display:"flex",
   flexDirection:"column",
@@ -242,4 +410,22 @@ const formtStyle: CSSProperties ={
   backgroundColor:"#d7e4c7"
 }
 
+const orderStyle:CSSProperties ={
+    display: "flex",
+    flexDirection:"column"
+}
 
+
+const orderContainer:CSSProperties = {
+    display: "flex",
+    flexDirection:"column"
+}
+
+const orderButton:CSSProperties = {
+    width:"30%",
+    backgroundColor: "green"
+}
+
+const productImgSize:CSSProperties = {
+    width:"25%"
+}

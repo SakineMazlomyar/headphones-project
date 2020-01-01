@@ -1,6 +1,44 @@
-button {
+#removeButton {
     background-color: red;
 }
-#container {
-background-color: rgb(15, 12, 12);
+.container {
+    border-style: inset;
+    height:15em;
 }
+
+@media only screen and (max-width: 600px) {
+    .container {
+        border-style: inset;
+        height:20em;
+    }
+  
+    .majorContainer {
+        flex-wrap: wrap;
+        position: relative;
+    }
+    .img{
+        width:40%
+    }
+     
+  }
+@media only screen and (min-width: 600px) {
+    .container {
+        border-style: inset;
+        height:20em;
+        position: relative;
+    }
+  
+    .majorContainer {
+        width:100%;
+
+        position: relative;
+    }
+    #img{
+        width:30%
+    }
+     
+  }
+  #vidareKassan{
+      background-color: black;
+      color: white
+  }

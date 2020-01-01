@@ -44,14 +44,14 @@ export default class ShoppingCard extends React.Component<Props, State>{
            
             return parsedShoppingCart.map((product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string })=>{
                 return <div 
-                className={"d-flex flex-column align-items-center backgroundOdd"}
+                className={"d-flex flex-column align-items-center backgroundOdd container"}
                
                 >
-                             <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
+                             <img id={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
                              <h4>{product.productName}</h4>
-                             <h4>{product.unitPrice}</h4>
-                             <span>{1}</span>
-                             <button onClick={()=> this.removeItem(product)}>Remove</button>
+                             <h4>{product.unitPrice+' SEK'}</h4>
+                             <span>Antal: {1}</span>
+                             <button id="removeButton"onClick={()=> this.removeItem(product)}>Remove</button>
                             
                            </div>
             })
@@ -67,11 +67,11 @@ export default class ShoppingCard extends React.Component<Props, State>{
                 
             <div>
                 <Link to={"/checkOut"}>
-                    <span>Gå Vidare Till Kassan</span>
+                    <span id={"vidareKassan"}>Gå Vidare Till Kassan</span>
                 </Link>
 
                 <h1>Here is shopping card</h1>
-            <div  className={"container-fluid "} >
+            <div  className={"container-fluid d-flex flex-row align-items-center backgroundOdd majorContainer"} >
                 {this.getProductsFromShopingCard()}
             </div>
             </div>
