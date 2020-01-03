@@ -22,7 +22,8 @@ interface Product {
  
 interface CurrentUser {
     id:string,
-    username:string
+    username:string,
+    email:string
 }
 
  interface Props {

@@ -1,7 +1,7 @@
 
 
 .itemOrderContainer {
-    background-color: white;
+    background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
 }
@@ -18,7 +18,7 @@
 
 .orderButton {
     width:30%;
-    background-color: green;
+    background-color:#f8f9fa;
 
 }
 
@@ -35,7 +35,7 @@
     width: 50%;
     margin-top: 3em;
     padding:1em;
-    background-color: #d7e4c7;
+    background-color: #f8f9fa;
 }
 
 .inputStyle {

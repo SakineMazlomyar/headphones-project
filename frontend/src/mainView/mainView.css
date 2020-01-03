@@ -1,0 +1,11 @@
+.mainViewContainer {
+    position: relative;
+    margin-top: 3em;
+    background-color: #f8f9fa;
+    display: flex;
+}
+
+.mainViewImg {
+    width:100%;
+   
+}

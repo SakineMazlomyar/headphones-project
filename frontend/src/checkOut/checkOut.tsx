@@ -6,6 +6,7 @@ import { threadId } from 'worker_threads';
 interface CurrentUser {
     id:string,
     username:string
+    email:string
 }
 
 interface Props {

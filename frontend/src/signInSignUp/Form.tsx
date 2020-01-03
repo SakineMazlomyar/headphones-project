@@ -2,9 +2,11 @@ import React,{Component } from 'react';
 import FormMall from './FormMall';
 import './form.css';
 import { requestHandler,  loginHandler } from '../helpers/requestHandler';
+import Admin from '../admin/admin';
 interface CurrentUser {
   id:string,
-  username:string
+  username:string,
+  email:string
 }
 interface Props {
     signedInUser:()=>void,
@@ -117,7 +119,7 @@ export default class Form extends Component<Props,State>{
       /* Check if this user is already in locastorage */
      if(parsetUsers.length > 0 ) {
       localStorage.removeItem("current_user");
-      localStorage.setItem("current_user", JSON.stringify({id:user.userId, username:user.username}));
+      localStorage.setItem("current_user", JSON.stringify({id:user.userId, username:user.username, email:user.email}));
       let existUser = false
         parsetUsers.filter((savedUser:any)=>{
 
@@ -289,7 +291,7 @@ export default class Form extends Component<Props,State>{
     }
 
     renderCurrentUserInfo = () => {
-      if(this.props.userInfo.id !== '') {
+      if(this.props.userInfo.id !== '' && this.props.userInfo.email !== "admin@gmail.com") {
         return (<div className={"orderContainer"}>
                  <button className={"orderButton"} onClick={this.getCurrentOrders}>Visa Alla Beställningar </button>
                  <div  className={"orderContainer"}>
@@ -297,7 +299,9 @@ export default class Form extends Component<Props,State>{
                  </div>
              
             </div>)
-      } else {
+      } else if (this.props.userInfo.id !== '' && this.props.userInfo.email === "admin@gmail.com"){
+        return <Admin />
+      }else {
         return this.renderForm()
       }
     }

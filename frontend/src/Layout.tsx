@@ -1,9 +1,11 @@
 import React,{CSSProperties} from 'react';
 import Navbar from './navbar/Navbar';
 import ViewContainer from './ViewContainer';
+import Footer from './footer/footer';
 interface CurrentUser {
     id:string,
-    username:string
+    username:string,
+    email:string
 }
 interface State {
     current_user:CurrentUser,
@@ -19,7 +21,7 @@ export default class Layout extends React.Component<Props, State>{
     constructor(props:Props){
         super(props);
             this.state = { 
-            current_user:{id:'', username:''},
+            current_user:{id:'', username:'', email:''},
             amount:0,
             totalPrice:0
            
@@ -45,7 +47,7 @@ export default class Layout extends React.Component<Props, State>{
         let current_user :any = localStorage.getItem("current_user");
         let parsedCurrentUser:any = JSON.parse(current_user);
         if(current_user) {
-            this.setState({current_user:{username:parsedCurrentUser.username, id:parsedCurrentUser.id}}, ()=>{console.log(this.state, 'here is current_user')})
+            this.setState({current_user:{username:parsedCurrentUser.username, id:parsedCurrentUser.id, email:parsedCurrentUser.email}}, ()=>{console.log(this.state, 'here is current_user')})
         }
 
       }
@@ -70,7 +72,7 @@ export default class Layout extends React.Component<Props, State>{
     
       signOut = () =>{
         localStorage.removeItem("current_user");
-        this.setState({current_user:{id:'', username:''}})
+        this.setState({current_user:{id:'', username:'', email:''}})
         return ''
       }
 
@@ -95,6 +97,7 @@ export default class Layout extends React.Component<Props, State>{
             <div>
                 <Navbar signedInUser={this.renderCurrentSignedInUser} amount={this.state.amount}/>
                 <ViewContainer signedInUser={this.checkForUser} userInfo={this.state.current_user} getAddedProducts={this.getAddedProducts} totalPrice={this.state.totalPrice}/>
+             
             </div>
             
         )
