@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router-dom';
 import  './shoppingCard.css';
 interface Props {
     getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void
@@ -21,11 +20,11 @@ export default class ShoppingCard extends React.Component<Props, State>{
 
 
 
-    removeItem = (product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string })=>{
+    removeItem = (product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string }, i:number)=>{
         let shoppingCart:any = localStorage.getItem("shoppingcart");
         let parsedShoppingCart = JSON.parse(shoppingCart);
         parsedShoppingCart.some((value:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string }, index:number)=>{
-            if(value._id === product._id ) {
+            if(value._id === product._id && index === i) {
                 parsedShoppingCart.splice(index, 1)
             }
         
@@ -42,7 +41,7 @@ export default class ShoppingCard extends React.Component<Props, State>{
         let parsedShoppingCart = JSON.parse(shoppingCart);
         if(parsedShoppingCart !== null && parsedShoppingCart.length > 0 ||this.state.removed === true){
            
-            return parsedShoppingCart.map((product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string })=>{
+            return parsedShoppingCart.map((product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string }, index:number)=>{
                 return <div 
                 className={"d-flex flex-column align-items-center backgroundOdd container"}
                
@@ -51,7 +50,7 @@ export default class ShoppingCard extends React.Component<Props, State>{
                              <h4>{product.productName}</h4>
                              <h4>{product.unitPrice+' SEK'}</h4>
                              <span>Antal: {1}</span>
-                             <button id="removeButton"onClick={()=> this.removeItem(product)}>Remove</button>
+                             <button id="removeButton"onClick={()=> this.removeItem(product, index)}>Remove</button>
                             
                            </div>
             })

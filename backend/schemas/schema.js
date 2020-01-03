@@ -13,6 +13,7 @@ let schema = buildSchema (`
         unitInStock:Int!
         unitPrice:Int!
         pictureUrl:String!
+        description:String!
     }
     type Producttr {
         _id: ID!
@@ -21,6 +22,7 @@ let schema = buildSchema (`
         unitPrice:Int!
         pictureUrl:String!
         counted:Int!
+        
     }
     
     input UserInput {
@@ -67,6 +69,7 @@ let schema = buildSchema (`
         unitInStock:Int!
         unitPrice:Int!
         pictureUrl:String!
+        description:String!
     }
 
     input ProductDelete {

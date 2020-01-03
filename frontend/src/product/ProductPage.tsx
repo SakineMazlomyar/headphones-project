@@ -1,6 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
-import  './productPage.css'
+import  './productPage.css';
+import { requestHandler} from '../helpers/requestHandler';
 
 interface Props {
   getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void
@@ -35,46 +36,24 @@ export default class ProductPage extends React.Component<Props, State> {
     }
 
 
-    componentDidMount(){
-    
-        this.getProducts()
-
-    }
+    componentDidMount() { this.getProducts() }
     getProducts = async () => {
+      //actuResponse.data.products
         let requestBody = {
               query: `
-              {
-                products {
+              { products {
                   productName
                   _id
                   unitPrice
                   unitInStock
                   pictureUrl 
                 }
-              }
-              
-              `
+              }`
             };
           
-          try  {
-            let res = await Axios({
-                url:'/graphql',
-                method: 'POST',
-                data: JSON.stringify(requestBody),
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              })
-              
-            let actuResponse = await res.data;
-            
-            
-            res.status !== 200 ? this.setState({products:[]}): this.setState({products:actuResponse.data.products},()=>{console.log(this.state.products)});
-
-          } catch(err){
-            //alert('Could not get all Products!')
-             console.log(err)
-          }
+          let data = await  requestHandler(requestBody);
+          typeof data !== 'undefined' ? this.setState({products:data.products}): this.setState({products:[]})
+          
 
     }
    
@@ -125,10 +104,16 @@ export default class ProductPage extends React.Component<Props, State> {
         <h4 id="link" onClick={()=> this.setState({viewProduct:false}) }>Gå tillbaka till produkts sida!</h4>
         <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
           <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${this.state.choosenProduct.pictureUrl}`} alt={this.state.choosenProduct.productName}/>
+          <div>
           <h6>{this.state.choosenProduct.productName}</h6>
           <h6>{this.state.choosenProduct.unitPrice+" SEK"}</h6>
           <h6>Produkt quentity: {this.state.choosenProduct.unitInStock}</h6>
+          <div>As consumer demand for live streaming and mobile video increases,
+            Qorvo's core RF solutions equip mobile devices with the
+            capability to meet the growing need for data.</div>
           <button id="addButton"onClick={()=> this.addProduct(this.state.choosenProduct)}>Lägg i Varukorg!</button>
+
+          </div>
         </div>
       </div>
       }

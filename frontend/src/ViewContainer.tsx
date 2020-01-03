@@ -7,6 +7,7 @@ import ContactPage from './contacts/ContactPage';
 import Form from './signInSignUp/Form';
 import ShoppingCard  from './shoppingCard/shoppingCard';
 import CheckOut from './checkOut/checkOut';
+import Admin from './admin/admin';
 
 interface Product {
     productName: string,
@@ -51,12 +52,10 @@ export default class ViewContainer extends React.Component<Props, State>{
                 <Route path="/SigninSignUp" render={()=> <Form signedInUser={this.props.signedInUser} userInfo={this.props.userInfo}/>} />
                 <Route path="/shoppingCard" render={ ()=> <ShoppingCard  getAddedProducts={this.props.getAddedProducts}/> }/>
                 <Route path="/checkOut" render={()=><CheckOut totalPrice={this.props.totalPrice} userInfo={this.props.userInfo}/>}/>
+                <Route path="/admin" component={Admin}/>
 
             </React.Fragment>
         </Switch>
-        </React.Fragment>
-        
-        
-        )         
+        </React.Fragment>)         
     }
 }

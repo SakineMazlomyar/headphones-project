@@ -100,7 +100,8 @@ const  Root ={
                     productName:args.ProductInput.productName,
                     unitInStock:args.ProductInput.unitInStock,
                     unitPrice:args.ProductInput.unitPrice,
-                    pictureUrl:args.ProductInput.pictureUrl
+                    pictureUrl:args.ProductInput.pictureUrl,
+                    description:args.ProductInput. description
                 })
     
                 return product.save();

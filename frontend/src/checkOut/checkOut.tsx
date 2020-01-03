@@ -143,8 +143,8 @@ export default class CheckOut extends Component<Props,State>{
                let actuResponse = await res.data;
                window.location.assign(actuResponse.url)
                console.log(actuResponse)
-             
-               
+               localStorage.setItem("shoppingcart",JSON.stringify([]))
+            
              } catch(err){
                //alert('Could not get all Products!')
                 console.log("Error at posting orders"+err)

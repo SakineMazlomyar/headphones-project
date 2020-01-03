@@ -49,8 +49,7 @@ fix how to show data for user after they save their order send
 let currentData;
 app.post('/pay2', (req, res, next) => {
     currentData = req.body;
-    console.log(currentData)
-  
+ 
     var create_payment_json = {
         "intent": "sale",
         "payer": { 
@@ -95,7 +94,7 @@ app.post('/pay2', (req, res, next) => {
 
 
 app.get('/success',(req,res)=> {
-    console.log(currentData)
+ 
     let paymentId= req.query.paymentId;
     let payerId = req.query.PayerID;
  
@@ -110,7 +109,7 @@ app.get('/success',(req,res)=> {
     };
     paypal.payment.execute(paymentId, execute_payment_json, async (error, payment)=> {
         if (error) {
-            console.log(error.response);
+         
             throw error;
         } else {
             try {
@@ -154,13 +153,31 @@ app.get('/success',(req,res)=> {
                             let th = orderDetails.save();
                             let createdOrderDe = await th
                             let relCreatedOrderDe = await createdOrderDe;
-                            console.log(relCreatedOrderDe)
-                            res.send('Your order created successfully close this page!')
+                        
+                            let count = {};
+                            relCreatedOrderDe.productIds.forEach(function(i) { 
+                            count[i] = (count[i]||0) + 1});
+                                
+                            let product = await (await Product.find({ "_id": { "$in":relCreatedOrderDe.productIds }})).filter(async (pr) =>{
+                                
+                                for(rt in count ) {
+                                  
+                                    if(`"${pr._id}"` === `"${rt}"`) {
+                                        pr.unitInStock = pr.unitInStock-count[rt] 
+                                       let tr =  await Product.updateOne({"_id":pr._id}, { "$inc": { unitInStock:-count[rt]} });
+                                       let h  = await tr
+                                     
+                                    }
+                                }
 
+                            });
+                            /* Change it when you deploy the app */
+                            res.send('Success')
+                            
                          }
 
                     } catch(error) {
-                        throw new Error ("Error at saving order")
+                        throw new Error (error)
                     }
                 
                 }
@@ -181,26 +198,3 @@ app.get('/canceled',(req,res)=>{
 
 const port = 5000;
 let portInfo = app.listen(port,()=>{ console.log('Server started at port: '+ portInfo.address().port)});
-
-
-
-/* 
-products: () => {
-        return products
-    },
-    createProducts: (args) => {
-    const product = {
-        _id: Math.random().toString(),
-        productName:args.ProductInput.productName,
-        unitInStock:args.ProductInput.unitInStock,
-        unitPrice:args.ProductInput.unitPrice,
-        pictureUrl:args.ProductInput.pictureUrl
-
-        }
-
-        products.push(product)
-        return product
-    },
-
-
-*/
