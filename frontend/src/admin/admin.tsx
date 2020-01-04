@@ -1,5 +1,7 @@
 import React,{CSSProperties} from 'react';
 import { requestHandler } from '../helpers/requestHandler';
+import ProductForm from '../product-form/product-form';
+import ShipperForm  from '../shipper-form/shipper-form';
 interface  Order {
     _id:string,
     shipFirstName: string,
@@ -28,11 +30,21 @@ interface User {
     shippingPrice:number
     shippingMethod:string
   }
+interface Product {
+    productName: string,
+    _id:string,
+    unitPrice:number,
+    unitInStock:number,
+    pictureUrl:string
+}
 interface State{
   
     orders:Order[],
     users:User[],
-    shippers:Shipper[]
+    shippers:Shipper[],
+    showProductForm:boolean,
+    showShipperForm:boolean,
+    products:Product[]
 }
 
 interface Props {
@@ -44,11 +56,14 @@ export default class Admin extends React.Component <Props, State>{
             this.state = { 
                 orders:[],
                 users:[],
-                shippers:[]
+                shippers:[],
+                showProductForm:false,
+                showShipperForm:false,
+                products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:""}],
         }
     }
 
-
+    /* Visa alla produkter och kunna modifera quantity */
     getAllOrders = async ()=>{
         let requestBody = {
             query: `
@@ -84,22 +99,16 @@ export default class Admin extends React.Component <Props, State>{
 
     getAllUsers = async ()=>{
         let requestBody = {
-            query: `
-            {
-                users {
+            query: `{ users {
                   _id
                   email
                   username
                 }
-              } 
-              
-            `
+              } `
           };
        
-          
           let data = await  requestHandler(requestBody);
           if(typeof data !== 'undefined') {
-
               this.setState({users: data.users}, ()=>{console.log(this.state.users.length)})
           }
 
@@ -117,11 +126,25 @@ export default class Admin extends React.Component <Props, State>{
           };
           let data = await  requestHandler(requestBody);
           if(typeof data !== 'undefined') {
-
-              this.setState({shippers: data.shippers}, ()=>{console.log(this.state.shippers.length)})
+                this.setState({shippers: data.shippers}, ()=>{console.log(this.state.shippers.length)})
           }
-
     }
+    getAllProducts = async ()=>{
+        let requestBody = {
+            query: `{ products {
+                productName
+                _id
+                unitPrice
+                unitInStock
+                pictureUrl 
+              }
+            }`
+          };
+        
+        let data = await  requestHandler(requestBody);
+        typeof data !== 'undefined' ? this.setState({products:data.products}): this.setState({products:[]})
+    }
+    
     displayOrders = ()=> {
         if(this.state.orders.length > 0) {
         let orders =  this.state.orders.map((order)=>{
@@ -163,9 +186,14 @@ export default class Admin extends React.Component <Props, State>{
             </div>  
         }
     }
-    hideOrder = ()=>{ this.setState({ orders:[]})}
-    hideUser= ()=>{ this.setState({ users:[]})}
-    hideShipper= ()=>{ this.setState({ shippers:[]})}
+    hideOrder = ()=>{ this.setState({ orders:[]})};
+    hideUser= ()=>{ this.setState({ users:[]})};
+    hideShipper= ()=>{ this.setState({ shippers:[]})};
+    showProductForm = ()=>{this.setState({ showProductForm:true})};
+    hideProduktForm = ()=>{this.setState({ showProductForm:false})};
+    showShipperForm = ()=>{this.setState({ showShipperForm:true})};
+    hideShipperForm = ()=>{this.setState({ showShipperForm:false})};
+    hideProducts = ()=>{this.setState({ products:[]})};
     displayUsers = ()=> {
         if(this.state.users.length > 0 ) {
             let users =  this.state.users.map((user)=>{
@@ -182,8 +210,47 @@ export default class Admin extends React.Component <Props, State>{
         }
        
     }
+    displayProduktForm = ()=> {
+        if(this.state.showProductForm === true) {
 
-    
+            return (<div>
+                     <button onClick={this.hideProduktForm}>Gömma Produkts Formen!</button>
+                    <ProductForm/>
+                </div>)
+        }
+    }
+    displayShipperForm = ()=> {
+        if(this.state.showShipperForm === true) {
+
+            return (<div>
+                     <button onClick={this.hideShipperForm}>Gömma Leverans Methoder Formen!</button>
+                    <ShipperForm />
+                </div>)
+        }
+    }
+    modifyChoosenProduct = (product:{productName: string, _id:string, unitPrice:number, unitInStock:number,pictureUrl:string})=>{
+        console.log(product)
+        return ''
+    }
+    displayProduct = ()=>{
+        if(this.state.products.length > 1) {
+            let products =  this.state.products.map((product)=>{
+                return <ul className={"orderContainer"}>
+                    <span>En Produkt: </span>
+                    <li>{product._id}</li>
+                    <li>{product.productName}</li>
+                    <li>{product.pictureUrl}</li>
+                    <li>{product.unitInStock}</li>
+                    <li>{product.unitPrice+ " SEK"}</li>
+                    <button onClick={()=>this.modifyChoosenProduct(product)}>Modify This produkt</button>
+                </ul>
+            })
+            return <div>
+            <button onClick={this.hideProducts}>Gömma Alla Produkter!</button>
+            {products}
+            </div>  
+        }
+    }
 
 
    
@@ -191,11 +258,17 @@ export default class Admin extends React.Component <Props, State>{
         return(
             <div style={adminContainer}>
                 <h1>Hej Admin</h1>
-                <button onClick={this.getAllOrders}>Visa Alla Beställningar Från Alla Användare!</button>
+                <button style={item} onClick={this.showProductForm}>Skapa En Produkt</button>
+                {this.displayProduktForm()}
+                <button style={item} onClick={this.showShipperForm}>Skapa En Leverans Method</button>
+                {this.displayShipperForm()}
+                <button style={item} onClick={this.getAllProducts}>Visa Alla produkter</button>
+                {this.displayProduct()}
+                <button style={item} onClick={this.getAllOrders}>Visa Alla Beställningar Från Alla Användare!</button>
                 {this.displayOrders()}
-                <button onClick={this.getAllUsers}>Visa Alla Användare!</button>
+                <button style={item} onClick={this.getAllUsers}>Visa Alla Användare!</button>
                 {this.displayUsers()}
-                <button onClick={this.getAllShipperMethods}>Visa Alla Levernans Methoder!</button>
+                <button style={item} onClick={this.getAllShipperMethods}>Visa Alla Levernans Methoder!</button>
                 {this.displayShippers()}
                 {/* 
                 
@@ -213,6 +286,11 @@ export default class Admin extends React.Component <Props, State>{
 
 const adminContainer:CSSProperties ={
     display:"flex",
-    flexDirection:"column"
+    flexDirection:"column",
+    justifyContent:"space-around"
 }
+const item:CSSProperties ={
+   margin:"1em"
+}
+
 
