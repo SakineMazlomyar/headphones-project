@@ -113,13 +113,8 @@ const  Root ={
     deleteProduct: async (args) => {
         try {
             
-            let foundProduct = await Product.findOne({_id:args.ProductDelete._id})
-            let acFoundProduct = await foundProduct;
-            if(!acFoundProduct){
-                throw new Error ('Product does not exist!')
-            }
-            Product.deleteOne({_id:args.ProductDelete._id})
-            return {_id:1}
+            let deletedPro = await Product.deleteOne({_id:args.ProductDelete._id});
+            return deletedPro
         } catch (error){
             throw new Error ('Error at delete product' + error)
         }
@@ -157,6 +152,43 @@ const  Root ={
         }
     },
 
+    updateChoosenShipper: async(shipper)=>{
+        try {
+           
+            let choosenShippetToUpdate =  await Shipper.updateOne(
+            {"_id":shipper.ShipperUpdate._id},
+            { companyName:shipper.ShipperUpdate.companyName,
+                shippingMethod:shipper.ShipperUpdate.shippingMethod,
+                shippingPrice:shipper.ShipperUpdate.shippingPrice,
+               
+            });
+            let updatedShipper = await choosenShippetToUpdate;
+            
+            let ship = await Shipper.findById(shipper.ShipperUpdate._id);
+            let relShip = await ship;
+          
+         
+            if(!ship ) {
+                throw new Error('We chould not find this shipper')
+                
+            } else {
+        
+            return relShip
+            }
+        } catch(error){
+            throw  new Error("Error at updating specefic shipper" + error)
+        }
+    },
+    deleteShipper:  async (args) => {
+        try {
+            
+            let deletedShipper = await Shipper.deleteOne({_id:args.ShipperDelete._id});
+            return deletedShipper
+        } catch (error){
+            throw new Error ('Error at delete Shipper' + error)
+        }
+    },
+    
     orders:()=>{
         try {
             return Order.find();

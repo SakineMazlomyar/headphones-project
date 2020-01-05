@@ -61,18 +61,20 @@ export default class ProductPage extends React.Component<Props, State> {
     }
    
     renderProducts= ()=> {
-        if(this.state.products.length > 1 && this.state.viewProduct === false) {
+        if(this.state.products.length > 0 && this.state.viewProduct === false) {
            let products =  this.state.products.map((product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string, description:string})=>{
             
-            
-                    
+            if(product._id !== '') {
+              
              return   <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
-              <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
-              <h6>{product.productName}</h6>
-              <h6>{product.unitPrice+" SEK"}</h6>
-              <h6>Produkt quentity: {product.unitInStock}</h6>
-              <button id="viewButton" onClick={()=> this.viewProduct(product)}>View Product!</button>
-            </div>
+                <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
+                <h6>{product.productName}</h6>
+                <h6>{product.unitPrice+" SEK"}</h6>
+                <h6>Produkt quentity: {product.unitInStock}</h6>
+                <button id="viewButton" onClick={()=> this.viewProduct(product)}>View Product!</button>
+              </div>
+            }
+                    
             })
 
 
@@ -134,6 +136,7 @@ export default class ProductPage extends React.Component<Props, State> {
         )
     }
 }
+
 
 
 

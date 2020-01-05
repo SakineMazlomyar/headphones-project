@@ -47,7 +47,9 @@ interface State{
     showShipperForm:boolean,
     products:Product[],
     modified:Product,
-    modifiedProdcut:boolean
+    modifiedProdcut:boolean,
+    modifiedShipper:Shipper,
+    modifiedShipp:boolean
 }
 
 interface Props {
@@ -64,7 +66,9 @@ export default class Admin extends React.Component <Props, State>{
                 showShipperForm:false,
                 products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}],
                 modified:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""},
-                modifiedProdcut:false
+                modifiedProdcut:false,
+                modifiedShipper:{ _id:'', companyName:'', shippingPrice:0, shippingMethod:''},
+                modifiedShipp:false
         }
     }
 
@@ -156,6 +160,7 @@ export default class Admin extends React.Component <Props, State>{
         let orders =  this.state.orders.map((order)=>{
             return <ul className={"orderContainer"}>
                         Ett Besällning: 
+                        <li>Id: {order._id}</li>
                         <li>Namn: {order.shipFirstName}</li>
                         <li>Efternamn: {order.shipLastName}</li>
                         <li>Address: {order.shippAdress} Postnummer: {order.shippPostelCode} Stad: {order.shipCity}</li>
@@ -181,9 +186,12 @@ export default class Admin extends React.Component <Props, State>{
         if(this.state.shippers.length > 0 ) {
             let shippers = this.state.shippers.map((shipper)=>{
                 return <ul className={"orderContainer"}>
+                    <li>{shipper._id}</li>
                     <li>{shipper.companyName}</li>
                     <li>{shipper.shippingMethod}</li>
                     <li>{shipper.shippingPrice+ "SEK"}</li>
+                    <button onClick={()=> this.updateThisShipper(shipper)}>Update This shipper Method</button>
+                    <button onClick={()=> this.deleteThisShipper(shipper)}>Delete This Shipper</button>
                 </ul>
             })
             return <div>
@@ -198,7 +206,7 @@ export default class Admin extends React.Component <Props, State>{
     showProductForm = ()=>{this.setState({ showProductForm:true})};
     hideProduktForm = ()=>{this.setState({ showProductForm:false, modifiedProdcut:false, modified:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}})};
     showShipperForm = ()=>{this.setState({ showShipperForm:true})};
-    hideShipperForm = ()=>{this.setState({ showShipperForm:false})};
+    hideShipperForm = ()=>{this.setState({ showShipperForm:false,   modifiedShipp:false, modifiedShipper:{_id:'', companyName:'', shippingPrice:0, shippingMethod:''}})};
     hideProducts = ()=>{this.setState({ products:[]})};
     displayUsers = ()=> {
         if(this.state.users.length > 0 ) {
@@ -225,15 +233,26 @@ export default class Admin extends React.Component <Props, State>{
                 </div>)
         }
     }
+    updateThisShipper = async (shipper: {_id:string, companyName:string, shippingPrice:number, shippingMethod:string})=>{
+        this.setState({
+            modifiedShipper:{_id:shipper._id,
+            companyName:shipper.companyName,
+            shippingPrice:shipper.shippingPrice,
+            shippingMethod:shipper.shippingMethod},
+            modifiedShipp:true
+            });
+        
+    }
     displayShipperForm = ()=> {
-        if(this.state.showShipperForm === true) {
+        if(this.state.showShipperForm === true || this.state.modifiedShipp === true) {
 
             return (<div>
                      <button onClick={this.hideShipperForm}>Gömma Leverans Methoder Formen!</button>
-                    <ShipperForm />
+                    <ShipperForm modified={this.state.modifiedShipper}/>
                 </div>)
         }
     }
+
     modifyChoosenProduct = async (product:{productName: string, _id:string, unitPrice:number, unitInStock:number,pictureUrl:string, description:string})=>{
         this.setState({
             modified:{productName: product.productName, _id:product._id,unitPrice:product.unitPrice, 
@@ -249,7 +268,9 @@ export default class Admin extends React.Component <Props, State>{
             query: `
             mutation {
                 deleteProduct(ProductDelete: {_id: "${product._id}"}) {
-                  _id
+                    ok
+                    n
+                    deletedCount
                 }
               }
               
@@ -258,7 +279,27 @@ export default class Admin extends React.Component <Props, State>{
         
         let data = await  requestHandler(requestBody);
         console.log(data)
-        typeof data !== 'undefined' ? alert(data.deleteProduct._id):alert("We could not remove this product")
+        typeof data !== 'undefined' ? alert(data.deleteProduct.n) :alert("We could not remove this product")
+        
+    }
+    deleteThisShipper  = async (shipper:{_id:string, companyName:string, shippingPrice:number, shippingMethod:string})=>{
+        
+        let requestBody = {
+            query: `
+            mutation {
+                deleteShipper(ShipperDelete: {_id: "${shipper._id}"}) {
+                  ok
+                  n
+                  deletedCount
+                }
+              }
+              
+            `
+          };
+        
+        let data = await  requestHandler(requestBody);
+        console.log(data)
+        typeof data !== 'undefined' ? alert(data.deleteShipper.n) :alert("We could not remove this shipper")
         
     }
     displayProduct = ()=>{
@@ -291,7 +332,7 @@ export default class Admin extends React.Component <Props, State>{
                 <h1>Hej Admin</h1>
                 <button style={item} onClick={this.showProductForm}>Skapa En Produkt/update</button>
                 {this.displayProduktForm()}
-                <button style={item} onClick={this.showShipperForm}>Skapa En Leverans Method</button>
+                <button style={item} onClick={this.showShipperForm}>Skapa En Leverans Method/update</button>
                 {this.displayShipperForm()}
                 <button style={item} onClick={this.getAllProducts}>Visa Alla produkter</button>
                 {this.displayProduct()}
@@ -301,12 +342,6 @@ export default class Admin extends React.Component <Props, State>{
                 {this.displayUsers()}
                 <button style={item} onClick={this.getAllShipperMethods}>Visa Alla Levernans Methoder!</button>
                 {this.displayShippers()}
-                {/* 
-                
-                create and remove shhipper and product
-                
-                */}
-                
                  
             </div>
             

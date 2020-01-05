@@ -61,9 +61,25 @@ let schema = buildSchema (`
         updatedAt: String!
         
     }
-    
+    type ProductDeleted {
+        n: Int!
+        ok: Int!
+        deletedCount:Int!
+        
+    }
+    type ShipperDeleted {
+        n: Int!
+        ok: Int!
+        deletedCount:Int!
+        
+    }
   
-
+    input ShipperUpdate {
+        _id: ID!
+        companyName:String!
+        shippingPrice:Int!
+        shippingMethod:String!
+    }
    input ProductInput {
         productName: String!
         unitInStock:Int!
@@ -85,10 +101,12 @@ let schema = buildSchema (`
         
     }
 
-    type ProductDeleted {
+    input ShipperDelete {
         _id: ID!
         
     }
+
+   
 
 
     input ShipperInput {
@@ -130,10 +148,12 @@ let schema = buildSchema (`
     type RootMutation {
         createUser(UserInput:UserInput):User
         createProduct(ProductInput: ProductInput):Product
-        deleteProduct(ProductDelete:ProductDelete):ProductDeleted
+        deleteProduct(ProductDelete:ProductDelete): ProductDeleted
         createShipper(ShipperInput: ShipperInput):Shipper
         createOrder(OrderInput: OrderInput):Order
         updateChoosenProduct(ProductUpdate: ProductUpdate):Product
+        updateChoosenShipper(ShipperUpdate: ShipperUpdate):Shipper
+        deleteShipper(ShipperDelete: ShipperDelete):ShipperDeleted
 
     }
     schema {
