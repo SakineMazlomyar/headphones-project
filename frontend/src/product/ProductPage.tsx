@@ -12,7 +12,8 @@ interface Product {
     _id:string,
     unitPrice:number,
     unitInStock:number,
-    pictureUrl:string
+    pictureUrl:string,
+    description:string
 }
 interface State {
     products:Product[],
@@ -25,9 +26,9 @@ export default class ProductPage extends React.Component<Props, State> {
     constructor(props:Props){
         super(props);
             this.state ={ 
-            products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:""}],
+            products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}],
             viewProduct:false,
-            choosenProduct:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:""}
+            choosenProduct:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}
           
         
         }
@@ -47,11 +48,13 @@ export default class ProductPage extends React.Component<Props, State> {
                   unitPrice
                   unitInStock
                   pictureUrl 
+                  description
                 }
               }`
             };
           
           let data = await  requestHandler(requestBody);
+
           typeof data !== 'undefined' ? this.setState({products:data.products}): this.setState({products:[]})
           
 
@@ -59,7 +62,7 @@ export default class ProductPage extends React.Component<Props, State> {
    
     renderProducts= ()=> {
         if(this.state.products.length > 1 && this.state.viewProduct === false) {
-           let products =  this.state.products.map((product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string})=>{
+           let products =  this.state.products.map((product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string, description:string})=>{
             
             
                     
@@ -89,7 +92,7 @@ export default class ProductPage extends React.Component<Props, State> {
         alert('Du laggt till en produkt!')
 
     }
-    viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string})=>{
+    viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string, description:string})=>{
       this.setState({
         viewProduct:true,
         choosenProduct: product
@@ -108,9 +111,7 @@ export default class ProductPage extends React.Component<Props, State> {
           <h6>{this.state.choosenProduct.productName}</h6>
           <h6>{this.state.choosenProduct.unitPrice+" SEK"}</h6>
           <h6>Produkt quentity: {this.state.choosenProduct.unitInStock}</h6>
-          <div>As consumer demand for live streaming and mobile video increases,
-            Qorvo's core RF solutions equip mobile devices with the
-            capability to meet the growing need for data.</div>
+      <div>Beskrivning:{this.state.choosenProduct.description}</div>
           <button id="addButton"onClick={()=> this.addProduct(this.state.choosenProduct)}>Lägg i Varukorg!</button>
 
           </div>

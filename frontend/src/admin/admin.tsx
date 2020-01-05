@@ -35,7 +35,8 @@ interface Product {
     _id:string,
     unitPrice:number,
     unitInStock:number,
-    pictureUrl:string
+    pictureUrl:string,
+    description:string
 }
 interface State{
   
@@ -44,7 +45,9 @@ interface State{
     shippers:Shipper[],
     showProductForm:boolean,
     showShipperForm:boolean,
-    products:Product[]
+    products:Product[],
+    modified:Product,
+    modifiedProdcut:boolean
 }
 
 interface Props {
@@ -59,7 +62,9 @@ export default class Admin extends React.Component <Props, State>{
                 shippers:[],
                 showProductForm:false,
                 showShipperForm:false,
-                products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:""}],
+                products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}],
+                modified:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""},
+                modifiedProdcut:false
         }
     }
 
@@ -137,6 +142,7 @@ export default class Admin extends React.Component <Props, State>{
                 unitPrice
                 unitInStock
                 pictureUrl 
+                description
               }
             }`
           };
@@ -190,7 +196,7 @@ export default class Admin extends React.Component <Props, State>{
     hideUser= ()=>{ this.setState({ users:[]})};
     hideShipper= ()=>{ this.setState({ shippers:[]})};
     showProductForm = ()=>{this.setState({ showProductForm:true})};
-    hideProduktForm = ()=>{this.setState({ showProductForm:false})};
+    hideProduktForm = ()=>{this.setState({ showProductForm:false, modifiedProdcut:false, modified:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}})};
     showShipperForm = ()=>{this.setState({ showShipperForm:true})};
     hideShipperForm = ()=>{this.setState({ showShipperForm:false})};
     hideProducts = ()=>{this.setState({ products:[]})};
@@ -211,11 +217,11 @@ export default class Admin extends React.Component <Props, State>{
        
     }
     displayProduktForm = ()=> {
-        if(this.state.showProductForm === true) {
+        if(this.state.showProductForm === true || this.state.modifiedProdcut === true) {
 
             return (<div>
                      <button onClick={this.hideProduktForm}>Gömma Produkts Formen!</button>
-                    <ProductForm/>
+                    <ProductForm  modified={this.state.modified}/>
                 </div>)
         }
     }
@@ -228,9 +234,32 @@ export default class Admin extends React.Component <Props, State>{
                 </div>)
         }
     }
-    modifyChoosenProduct = (product:{productName: string, _id:string, unitPrice:number, unitInStock:number,pictureUrl:string})=>{
-        console.log(product)
-        return ''
+    modifyChoosenProduct = async (product:{productName: string, _id:string, unitPrice:number, unitInStock:number,pictureUrl:string, description:string})=>{
+        this.setState({
+            modified:{productName: product.productName, _id:product._id,unitPrice:product.unitPrice, 
+              unitInStock:product.unitInStock,
+              pictureUrl:product.pictureUrl, description:product.description},
+              modifiedProdcut:true
+            });
+        
+    }
+    removeThisProduct = async (product:{productName: string, _id:string, unitPrice:number, unitInStock:number,pictureUrl:string, description:string})=>{
+        console.log(product._id)
+        let requestBody = {
+            query: `
+            mutation {
+                deleteProduct(ProductDelete: {_id: "${product._id}"}) {
+                  _id
+                }
+              }
+              
+            `
+          };
+        
+        let data = await  requestHandler(requestBody);
+        console.log(data)
+        typeof data !== 'undefined' ? alert(data.deleteProduct._id):alert("We could not remove this product")
+        
     }
     displayProduct = ()=>{
         if(this.state.products.length > 1) {
@@ -240,9 +269,11 @@ export default class Admin extends React.Component <Props, State>{
                     <li>{product._id}</li>
                     <li>{product.productName}</li>
                     <li>{product.pictureUrl}</li>
-                    <li>{product.unitInStock}</li>
+                    <li>Total UnitInStock: {product.unitInStock}</li>
                     <li>{product.unitPrice+ " SEK"}</li>
+                    <li>{product.description }</li>
                     <button onClick={()=>this.modifyChoosenProduct(product)}>Modify This produkt</button>
+                    <button onClick={()=>this.removeThisProduct(product)}>Remove This produkt</button>
                 </ul>
             })
             return <div>
@@ -258,7 +289,7 @@ export default class Admin extends React.Component <Props, State>{
         return(
             <div style={adminContainer}>
                 <h1>Hej Admin</h1>
-                <button style={item} onClick={this.showProductForm}>Skapa En Produkt</button>
+                <button style={item} onClick={this.showProductForm}>Skapa En Produkt/update</button>
                 {this.displayProduktForm()}
                 <button style={item} onClick={this.showShipperForm}>Skapa En Leverans Method</button>
                 {this.displayShipperForm()}

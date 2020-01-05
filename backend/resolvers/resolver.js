@@ -78,7 +78,8 @@ const  Root ={
 
     products :()=>{
         try {
-
+            
+            
             return Product.find();
         } catch(error) {
             throw new Error('Error at finding all product '+ error)
@@ -90,7 +91,6 @@ const  Root ={
 
             let productRes = await Product.findOne({productName:args.ProductInput.productName, pictureUrl:args.ProductInput.pictureUrl});
             let relProduct = await productRes
-            console.log(relProduct)
             if(relProduct) {
                 throw new Error('Product alread exist')
                 
@@ -118,7 +118,8 @@ const  Root ={
             if(!acFoundProduct){
                 throw new Error ('Product does not exist!')
             }
-            return Product.deleteOne({_id:args.ProductDelete._id})
+            Product.deleteOne({_id:args.ProductDelete._id})
+            return {_id:1}
         } catch (error){
             throw new Error ('Error at delete product' + error)
         }
@@ -239,6 +240,33 @@ const  Root ={
             }
         } catch(error){
             throw  new Error("Error at finding specefic shipper" + error)
+        }
+    },
+    updateChoosenProduct: async(product) => {
+        try {
+           
+            let foundProduct =  await Product.updateOne(
+            {"_id":product.ProductUpdate._id},
+            { unitInStock:product.ProductUpdate.unitInStock,
+                unitPrice:product.ProductUpdate.unitPrice,
+                pictureUrl:product.ProductUpdate.pictureUrl,
+                description:product.ProductUpdate.description
+            });
+            let updatedProduct  = await foundProduct;
+            
+            let pro = await Product.findById(product.ProductUpdate._id);
+            let relPro = await pro;
+          
+         
+            if(!foundProduct ) {
+                throw new Error('We chould not find this product')
+                
+            } else {
+        
+            return relPro 
+            }
+        } catch(error){
+            throw  new Error("Error at finding specefic product" + error)
         }
     }
 

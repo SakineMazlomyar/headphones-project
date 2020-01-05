@@ -17,7 +17,12 @@ const product = new Schema({
    pictureUrl:{
     type:String,
     required:true
+   },
+   description:{
+    type:String,
+    required:true
    }
+
 })
 
 module.exports = mongoose.model('Product', product);
