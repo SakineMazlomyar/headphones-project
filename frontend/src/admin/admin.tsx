@@ -38,6 +38,22 @@ interface Product {
     pictureUrl:string,
     description:string
 }
+  
+interface ProductUser {
+    productName: string,
+    _id:string,
+    unitPrice:number,
+    unitInStock:number,
+    pictureUrl:string,
+    description:string,
+    counted:number
+}
+interface choosenShipper {
+    _id:string,
+    companyName:string,
+    shippingPrice:number
+    shippingMethod:string
+  }
 interface State{
   
     orders:Order[],
@@ -49,7 +65,10 @@ interface State{
     modified:Product,
     modifiedProdcut:boolean,
     modifiedShipper:Shipper,
-    modifiedShipp:boolean
+    modifiedShipp:boolean,
+    choosenShipper: {orderId:string, shipper:choosenShipper},
+    current_orders_products:{id:string, products: ProductUser[]}
+
 }
 
 interface Props {
@@ -64,11 +83,13 @@ export default class Admin extends React.Component <Props, State>{
                 shippers:[],
                 showProductForm:false,
                 showShipperForm:false,
-                products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}],
+                products:[],
                 modified:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""},
                 modifiedProdcut:false,
                 modifiedShipper:{ _id:'', companyName:'', shippingPrice:0, shippingMethod:''},
-                modifiedShipp:false
+                modifiedShipp:false,
+                choosenShipper:{orderId:'', shipper:{_id:'', companyName:'', shippingPrice:0, shippingMethod:''}},
+                current_orders_products:{id:'', products:[]},
         }
     }
 
@@ -98,7 +119,6 @@ export default class Admin extends React.Component <Props, State>{
             `
           };
        
-          
           let data = await  requestHandler(requestBody);
           if(typeof data !== 'undefined') {
 
@@ -123,20 +143,28 @@ export default class Admin extends React.Component <Props, State>{
 
     }
     getAllShipperMethods = async ()=>{
-        let requestBody = {
-            query: `{
-                shippers {
-                  _id
-                  companyName
-                  shippingPrice
-                  shippingMethod
-                }
-              }`
-          };
-          let data = await  requestHandler(requestBody);
-          if(typeof data !== 'undefined') {
-                this.setState({shippers: data.shippers}, ()=>{console.log(this.state.shippers.length)})
-          }
+        if(this.state.modifiedShipp === true || this.state.modifiedShipp === false) {
+             let requestBody = {
+                 query: `{
+                     shippers {
+                       _id
+                       companyName
+                       shippingPrice
+                       shippingMethod
+                     }
+                   }`
+               };
+               let data = await  requestHandler(requestBody);
+               if(typeof data !== 'undefined') {
+                     this.setState({shippers: data.shippers}, ()=>{
+                         if(this.state.shippers.length <= 0) {
+                             alert('There is not shipper Method')
+                         }
+                     })
+               }else {
+                   this.setState({shippers: []})
+               }
+        }
     }
     getAllProducts = async ()=>{
         let requestBody = {
@@ -147,19 +175,82 @@ export default class Admin extends React.Component <Props, State>{
                 unitInStock
                 pictureUrl 
                 description
-              }
+                }
             }`
-          };
+            };
         
         let data = await  requestHandler(requestBody);
         typeof data !== 'undefined' ? this.setState({products:data.products}): this.setState({products:[]})
+        
     }
+    showOrderDetails = async (id:string) => {
+      
+          let requestBody = {
+              query: `
+              {
+                getSpeceficOrderDetails(_id: "${id}") {
+                  productName
+                  pictureUrl
+                  unitInStock
+                  unitPrice
+                  counted
+                }
+              } `
+            };
+      
+            let data = await requestHandler(requestBody);
+            typeof data !== 'undefined' ? this.setState({current_orders_products: {id:id, products:data.getSpeceficOrderDetails}})
+            :this.setState({current_orders_products:{id:'', products:[]}})
+    
+       
+  
+      }
+    showCurrentOrderProduct = ()=>{
+        if(this.state.current_orders_products.products.length > 0) {
+            return this.state.current_orders_products.products.map((product)=>{
+                return <ul className={"itemOrderContainer"} >
+                        <img className={"img-order"} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
+                        <li>{product.productName}</li>
+                        <li>{product.unitPrice+ "SEK"}</li>
+                        <li>total-köpt: {product.counted}</li>
+                    </ul>
+            })
+        }
+    }
+    getChoosenShipper = async (id:string, orderId:string) => {   
+        let requestBody = {
+        query: `
+        {   getSpeceficShipper(_id: "${id}") {
+                companyName
+                shippingPrice
+                shippingMethod
+            }
+            }`
+        };
+        let data = await requestHandler(requestBody);
+        console.log(data, 'here is shipper data')
+        typeof data !== 'undefined' ? this.setState({choosenShipper:{orderId:orderId, shipper:data.getSpeceficShipper}},()=>{console.log(this.state.choosenShipper, 'gick bra')})
+        :this.setState({choosenShipper:{orderId:'', shipper:{_id:'', shippingPrice:0, shippingMethod:'', companyName:''}}},()=>console.log(this.state.choosenShipper, 'her is gick inte bra'))
+    
+        
+    
+    }
+    displayChoosenShipper = ()=> {
+        return <ul className={"orderContainer"}>
+                    <li>{this.state.choosenShipper.shipper.companyName}</li>
+                    <li>{this.state.choosenShipper.shipper.shippingMethod}</li>
+                    <li>{this.state.choosenShipper.shipper.shippingPrice+ "SEK"}</li>
+                </ul>
+    }
+
+
     
     displayOrders = ()=> {
         if(this.state.orders.length > 0) {
+            console.log(this.state.orders)
         let orders =  this.state.orders.map((order)=>{
             return <ul className={"orderContainer"}>
-                        Ett Besällning: 
+                        One Order: 
                         <li>Id: {order._id}</li>
                         <li>Namn: {order.shipFirstName}</li>
                         <li>Efternamn: {order.shipLastName}</li>
@@ -167,12 +258,12 @@ export default class Admin extends React.Component <Props, State>{
                         <li>Mail: {order.shipMail}</li>
                         <li>Tel: {order.shipPhoneNo}</li>
                         <li>Datum: {order.orderDate}</li>
-                        {/* <button className={"orderButton"}  onClick={()=> this.showOrderDetails(order._id)}>Visa order details</button>
+                        <button className={"orderButton"}  onClick={()=> this.showOrderDetails(order._id)}>Visa order details</button>
                         <div>{this.state.current_orders_products.id === order._id ? this.showCurrentOrderProduct():''}</div>
                         
                         
                         <button  className={"orderButton"} onClick={()=> this.getChoosenShipper(order.selectedShipper, order._id)}>Visa valt frakt</button>
-                        {this.state.choosenShipper.orderId === order._id ? this.displayChoosenShipper():''} */}
+                        {this.state.choosenShipper.orderId === order._id ? this.displayChoosenShipper():''}
                  </ul>
             })
 
@@ -239,7 +330,8 @@ export default class Admin extends React.Component <Props, State>{
             companyName:shipper.companyName,
             shippingPrice:shipper.shippingPrice,
             shippingMethod:shipper.shippingMethod},
-            modifiedShipp:true
+            modifiedShipp:true,
+            shippers:[]
             });
         
     }
@@ -248,7 +340,7 @@ export default class Admin extends React.Component <Props, State>{
 
             return (<div>
                      <button onClick={this.hideShipperForm}>Gömma Leverans Methoder Formen!</button>
-                    <ShipperForm modified={this.state.modifiedShipper}/>
+                    <ShipperForm modified={this.state.modifiedShipper} getAllShipperMethods={this.getAllShipperMethods}/>
                 </div>)
         }
     }
@@ -258,7 +350,8 @@ export default class Admin extends React.Component <Props, State>{
             modified:{productName: product.productName, _id:product._id,unitPrice:product.unitPrice, 
               unitInStock:product.unitInStock,
               pictureUrl:product.pictureUrl, description:product.description},
-              modifiedProdcut:true
+              modifiedProdcut:true,
+              products:[]
             });
         
     }
@@ -279,7 +372,13 @@ export default class Admin extends React.Component <Props, State>{
         
         let data = await  requestHandler(requestBody);
         console.log(data)
-        typeof data !== 'undefined' ? alert(data.deleteProduct.n) :alert("We could not remove this product")
+        typeof data !== 'undefined' ? 
+
+        this.getAllProducts().then(()=>{
+          
+            alert(data.deleteProduct.n) 
+        }) 
+        :alert("We could not remove this product")
         
     }
     deleteThisShipper  = async (shipper:{_id:string, companyName:string, shippingPrice:number, shippingMethod:string})=>{
@@ -299,12 +398,16 @@ export default class Admin extends React.Component <Props, State>{
         
         let data = await  requestHandler(requestBody);
         console.log(data)
-        typeof data !== 'undefined' ? alert(data.deleteShipper.n) :alert("We could not remove this shipper")
+        typeof data !== 'undefined' ? this.getAllShipperMethods().then(()=>{
+            alert(data.deleteShipper.n) 
+        }):alert("We could not remove this shipper")
         
     }
     displayProduct = ()=>{
-        if(this.state.products.length > 1) {
+        if(this.state.products.length > 0) {
             let products =  this.state.products.map((product)=>{
+                
+
                 return <ul className={"orderContainer"}>
                     <span>En Produkt: </span>
                     <li>{product._id}</li>
@@ -316,6 +419,7 @@ export default class Admin extends React.Component <Props, State>{
                     <button onClick={()=>this.modifyChoosenProduct(product)}>Modify This produkt</button>
                     <button onClick={()=>this.removeThisProduct(product)}>Remove This produkt</button>
                 </ul>
+                
             })
             return <div>
             <button onClick={this.hideProducts}>Gömma Alla Produkter!</button>

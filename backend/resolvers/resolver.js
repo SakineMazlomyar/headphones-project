@@ -225,7 +225,7 @@ const  Root ={
 
             let orderDetail = await OrderDetails.findOne({orderId:_id});
             let relOrderDetail = await orderDetail;
-        
+            
             if(!relOrderDetail ) {
                 throw new Error('This shipper id doest not exist or somethig else went wrong!')
                 
@@ -249,7 +249,7 @@ const  Root ={
                     }
                 }
             })
-            
+            console.log(addedCoundPro)
             return addedCoundPro
             }
         } catch(error) {

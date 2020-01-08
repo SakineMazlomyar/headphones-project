@@ -52,7 +52,7 @@ export default class CheckOut extends Component<Props,State>{
                 totalPrice:0,
                 orderDate:'',
                 createdOrder:'',
-                selectedShipper:'5e03818e0ba8e433a8a60c55',
+                selectedShipper:'',
                 shippers:[]
         
         }
@@ -102,7 +102,7 @@ export default class CheckOut extends Component<Props,State>{
        this.setState({createdOrder:this.props.userInfo.id}, async()=>{
   
            if(this.state.createdOrder === '') {
-               alert('Sign in först')
+               alert('Sign In First!')
            } else { 
           
              let shoppingCart:any = localStorage.getItem("shoppingcart");
@@ -128,7 +128,7 @@ export default class CheckOut extends Component<Props,State>{
                   totalPrice:this.state.totalPrice,
                   orderDate:this.state.orderDate,
                   createdOrder:this.state.createdOrder,
-                  selectedShipper:this.state.selectedShipper,
+                  selectedShipper:this.state.selectedShipper === ''?this.state.shippers[0]._id:this.state.selectedShipper,
                  }
                  console.log(current_order, 'oneOrder')
              try  {
@@ -189,7 +189,9 @@ export default class CheckOut extends Component<Props,State>{
         
     ) }
 
-    handleSelectShipper = (event: any)=>{ this.setState({selectedShipper:event.target.value}) }
+    handleSelectShipper = (event: any)=>{ 
+        this.setState({selectedShipper:event.target.value},
+            ()=>{console.log(this.state.selectedShipper, 'heher')}) }
 
     
     renderShippers = ()=>{

@@ -18,7 +18,8 @@ interface Modified {
   
 }
 interface Props {
-    modified: Modified 
+    modified: Modified,
+    getAllShipperMethods:()=>any
 }
 export default class ShipperForm extends React.Component<Props, State>{
     constructor(props:Props) {
@@ -64,7 +65,9 @@ export default class ShipperForm extends React.Component<Props, State>{
           let data = await  requestHandler(requestBody);
           if(typeof data !== 'undefined') {
 
-              data.createShipper?alert("Success to create a shipper method "+data.createShipper._id):alert("Succes to update");
+              data.createShipper? this.setState({companyName:'', shippingMethod:'', shippingPrice:''},async ()=>
+                alert("Success to create a shipper method "+data.createShipper._id)
+               ):alert("Succes to update");
           }
     }
 
@@ -78,8 +81,6 @@ export default class ShipperForm extends React.Component<Props, State>{
                 <li>namn: {this.props.modified.companyName}</li>
                 <li>Method: {this.props.modified.shippingMethod}</li>
                 <li>pris: {this.props.modified.shippingPrice}</li>
-
-
             </ul>
         }
     }

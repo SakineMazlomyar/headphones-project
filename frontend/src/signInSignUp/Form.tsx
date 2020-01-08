@@ -188,9 +188,11 @@ export default class Form extends Component<Props,State>{
         };
   
         let data = await requestHandler(requestBody);
-        typeof data !== 'undefined' ? this.setState({current_orders:data.getSpeceficOrder},()=>console.log(this.state.current_orders)):this.setState({current_orders:[]})
+        typeof data !== 'undefined' ? this.setState({current_orders:data.getSpeceficOrder},()=>{ if(this.state.current_orders.length <=0){
+          alert("You Have No Order Yet!")
+        }}):this.setState({current_orders:[]})
         
-        }
+        } 
     }
 
     showOrderDetails = async (id:string) => {
@@ -256,13 +258,13 @@ export default class Form extends Component<Props,State>{
         if(this.state.current_orders.length > 0) {
             return this.state.current_orders.map((order)=>{
             return <ul className={"orderContainer"}>
-                        Ett Besällning: 
-                        <li>Namn: {order.shipFirstName}</li>
-                        <li>Efternamn: {order.shipLastName}</li>
+                        One Order: 
+                        <li>Name: {order.shipFirstName}</li>
+                        <li>Lastname: {order.shipLastName}</li>
                         <li>Address: {order.shippAdress} Postnummer: {order.shippPostelCode} Stad: {order.shipCity}</li>
-                        <li>Mail: {order.shipMail}</li>
+                        <li>Email: {order.shipMail}</li>
                         <li>Tel: {order.shipPhoneNo}</li>
-                        <li>Datum: {order.orderDate}</li>
+                        <li>Date Created This Order: {order.orderDate}</li>
                         <button className={"orderButton"}  onClick={()=> this.showOrderDetails(order._id)}>Visa order details</button>
                         <div>{this.state.current_orders_products.id === order._id ? this.showCurrentOrderProduct():''}</div>
                         
@@ -293,7 +295,7 @@ export default class Form extends Component<Props,State>{
     renderCurrentUserInfo = () => {
       if(this.props.userInfo.id !== '' && this.props.userInfo.email !== "admin@gmail.com") {
         return (<div className={"orderContainer"}>
-                 <button className={"orderButton"} onClick={this.getCurrentOrders}>Visa Alla Beställningar </button>
+                 <button className={"orderButton"} onClick={this.getCurrentOrders}>Show All Orders! </button>
                  <div  className={"orderContainer"}>
                     {this.displayCurrentOrder()}
                  </div>

@@ -3,12 +3,6 @@ ul{
     justify-content: space-around;
 }
 
-@media only screen and (max-width: 600px) {
-    body {
-      background-color: lightblue;
-    }
-  }
-
 
 .kundVagnWidth{
   width:"2em"

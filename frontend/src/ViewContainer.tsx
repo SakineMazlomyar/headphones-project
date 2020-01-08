@@ -30,7 +30,8 @@ interface CurrentUser {
     signedInUser:()=>void,
     userInfo:CurrentUser,
     getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void,
-    totalPrice:number
+    totalPrice:number,
+    amount:number
  }
 
 export default class ViewContainer extends React.Component<Props, State>{
@@ -51,12 +52,12 @@ export default class ViewContainer extends React.Component<Props, State>{
                 <Route path="/productPage"  render={ ()=> <ProductPage getAddedProducts={this.props.getAddedProducts}/>}/>
                 <Route path="/contact" component={ContactPage}/>
                 <Route path="/SigninSignUp" render={()=> <Form signedInUser={this.props.signedInUser} userInfo={this.props.userInfo}/>} />
-                <Route path="/shoppingCard" render={ ()=> <ShoppingCard  getAddedProducts={this.props.getAddedProducts}/> }/>
+                <Route path="/shoppingCard" render={ ()=> <ShoppingCard  amount={this.props.amount} getAddedProducts={this.props.getAddedProducts} /> }/>
                 <Route path="/checkOut" render={()=><CheckOut totalPrice={this.props.totalPrice} userInfo={this.props.userInfo}/>}/>
                 <Route path="/admin" component={Admin}/>
 
             </React.Fragment>
         </Switch>
-        </React.Fragment>)         
+        </React.Fragment>)          
     }
 }

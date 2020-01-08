@@ -172,7 +172,7 @@ app.get('/success',(req,res)=> {
 
                             });
                             /* Change it when you deploy the app */
-                            res.send('Success')
+                            res.send('Success To Create Your Order.Close This page Or Conctinue Shopping !')
                             
                          }
 

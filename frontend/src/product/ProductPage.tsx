@@ -91,7 +91,7 @@ export default class ProductPage extends React.Component<Props, State> {
         parsedShoppingCart.push(product);
         localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart));
         this.props.getAddedProducts(parsedShoppingCart);
-        alert('Du laggt till en produkt!')
+        alert('You Added One Product To Shopping cart!')
 
     }
     viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string, description:string})=>{
@@ -106,15 +106,15 @@ export default class ProductPage extends React.Component<Props, State> {
     viewOnProduct = ()=>{
       if(this.state.viewProduct) {
         return <div>
-        <h4 id="link" onClick={()=> this.setState({viewProduct:false}) }>Gå tillbaka till produkts sida!</h4>
+        <h5 id="link" onClick={()=> this.setState({viewProduct:false}) }>Go Back!</h5>
         <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
           <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${this.state.choosenProduct.pictureUrl}`} alt={this.state.choosenProduct.productName}/>
-          <div>
-          <h6>{this.state.choosenProduct.productName}</h6>
-          <h6>{this.state.choosenProduct.unitPrice+" SEK"}</h6>
-          <h6>Produkt quentity: {this.state.choosenProduct.unitInStock}</h6>
-      <div>Beskrivning:{this.state.choosenProduct.description}</div>
-          <button id="addButton"onClick={()=> this.addProduct(this.state.choosenProduct)}>Lägg i Varukorg!</button>
+          <div className={"detailContainer"}>
+          <h6>Name: {this.state.choosenProduct.productName}</h6>
+          <h6> Price: {this.state.choosenProduct.unitPrice+" SEK"}</h6>
+          <h6>Produkt Quantity: {this.state.choosenProduct.unitInStock}</h6>
+          <div>Description: {this.state.choosenProduct.description}</div>
+          <button id="addButton"onClick={()=> this.addProduct(this.state.choosenProduct)}>Add To Shopping Cart!</button>
 
           </div>
         </div>

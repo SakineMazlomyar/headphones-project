@@ -8,12 +8,16 @@ export default class MainView extends React.Component{
         return(
             <div>
             <div className="mainViewContainer">
-                <h3>Välkomna Till Smart Headphones</h3>
-                <p>These over-ear headphones are a landmark launch, becoming the highest-ever scoring wireless headphones
-                 at our expert lab. <br/>The industry-leading active noise cancelling is the best we’ve yet seen,
-                  they’re superbly comfortable, and the 27-plus hour battery life goes the distance. <br/>
-                  They’re foldable and there’s even a detachable cord if you forget to charge them, 
-                  plus a whole host of optional settings in the accompanying smartphone app.</p>
+                <h4 > Welcome To SmartHeaphones</h4>
+                <p className="paragraph">SmartHeaphones is a new dropshipping website in Sweden.
+                    Smart headphones present a new direction for headphones and personal audio devices.
+                    Until now, headphones have been limited to playing music, general audio, or providing noise cancelation 
+                    features. Smart headphones combine the intelligence of a smartphone with the audio
+                    capabilities of headphones, and extend those capabilities beyond any personal audio device.
+                    Some of these smart capabilities include language translation, fitness and heart rate tracking,
+                    voice-based personal assistants, contextual location-based suggestions, environment-based 
+                    noise suppression or audio enhancement, and gesture and touch-based control, among others.
+                </p>
             </div>
             <div>
                   <img className={'mainViewImg'} src={process.env.PUBLIC_URL +`${mainView }`} alt={"main-view"}/>
