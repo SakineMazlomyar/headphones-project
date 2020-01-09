@@ -1,0 +1,42 @@
+.contactContainer {
+    position: relative;
+    margin-top: 3em;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: row;
+    margin:5em;
+    justify-content: space-around;
+}
+.detailContainer {
+    position: relative;
+
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+}
+
+.supportImg{
+    width:30%
+}
+
+#contactFormStyle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: rgb(215, 228, 199);
+    
+}
+
+@media only screen and (max-width: 800px) {
+   
+    .contactContainer {
+        position: relative;
+        margin-top: 3em;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        margin:5em;
+    }
+  }

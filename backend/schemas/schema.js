@@ -73,6 +73,14 @@ let schema = buildSchema (`
         deletedCount:Int!
         
     }
+
+    type Subscription {
+        _id:ID!
+        email:String!
+    }
+    input SubscriptionInput {
+        email:String!
+    }
   
     input ShipperUpdate {
         _id: ID!
@@ -141,6 +149,7 @@ let schema = buildSchema (`
         getSpeceficOrder(_id:ID!):[Order!]!
         getSpeceficOrderDetails(_id:ID!): [Producttr!]!
         getSpeceficShipper(_id:ID!):Shipper!
+        subscriptions:[Subscription!]!
       
     }
     
@@ -154,6 +163,7 @@ let schema = buildSchema (`
         updateChoosenProduct(ProductUpdate: ProductUpdate):Product
         updateChoosenShipper(ShipperUpdate: ShipperUpdate):Shipper
         deleteShipper(ShipperDelete: ShipperDelete):ShipperDeleted
+        createSubscription(SubscriptionInput:SubscriptionInput):Subscription
 
     }
     schema {

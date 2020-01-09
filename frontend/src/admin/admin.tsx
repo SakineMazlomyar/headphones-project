@@ -54,6 +54,11 @@ interface choosenShipper {
     shippingPrice:number
     shippingMethod:string
   }
+
+interface Subscription {
+    _id:string,
+    email:string
+}
 interface State{
   
     orders:Order[],
@@ -67,7 +72,8 @@ interface State{
     modifiedShipper:Shipper,
     modifiedShipp:boolean,
     choosenShipper: {orderId:string, shipper:choosenShipper},
-    current_orders_products:{id:string, products: ProductUser[]}
+    current_orders_products:{id:string, products: ProductUser[]},
+    subscriptions:Subscription[]
 
 }
 
@@ -90,10 +96,11 @@ export default class Admin extends React.Component <Props, State>{
                 modifiedShipp:false,
                 choosenShipper:{orderId:'', shipper:{_id:'', companyName:'', shippingPrice:0, shippingMethod:''}},
                 current_orders_products:{id:'', products:[]},
+                subscriptions:[]
         }
     }
 
-    /* Visa alla produkter och kunna modifera quantity */
+/* Check mongo connection on deploy */
     getAllOrders = async ()=>{
         let requestBody = {
             query: `
@@ -122,7 +129,7 @@ export default class Admin extends React.Component <Props, State>{
           let data = await  requestHandler(requestBody);
           if(typeof data !== 'undefined') {
 
-              this.setState({orders: data.orders}, ()=>{console.log(this.state.orders.length)})
+              this.setState({orders: data.orders},()=>{alert(this.state.orders.length)})
           }
     }
 
@@ -138,7 +145,7 @@ export default class Admin extends React.Component <Props, State>{
        
           let data = await  requestHandler(requestBody);
           if(typeof data !== 'undefined') {
-              this.setState({users: data.users}, ()=>{console.log(this.state.users.length)})
+              this.setState({users: data.users},()=>{alert(this.state.users.length)})
           }
 
     }
@@ -180,7 +187,7 @@ export default class Admin extends React.Component <Props, State>{
             };
         
         let data = await  requestHandler(requestBody);
-        typeof data !== 'undefined' ? this.setState({products:data.products}): this.setState({products:[]})
+        typeof data !== 'undefined' ? this.setState({products:data.products},()=>{alert(this.state.products.length)}): this.setState({products:[]})
         
     }
     showOrderDetails = async (id:string) => {
@@ -205,6 +212,25 @@ export default class Admin extends React.Component <Props, State>{
        
   
       }
+    getAllSubscription = async () => {
+      
+          let requestBody = {
+              query: `
+              {
+                subscriptions {
+                  _id
+                  email
+                }
+              }
+               `
+            };
+      
+            let data = await requestHandler(requestBody);
+            typeof data !== 'undefined' ? this.setState({subscriptions:data.subscriptions},()=>{alert(this.state.subscriptions.length)}):this.setState({subscriptions:[]})
+    
+       
+  
+      }
     showCurrentOrderProduct = ()=>{
         if(this.state.current_orders_products.products.length > 0) {
             return this.state.current_orders_products.products.map((product)=>{
@@ -212,7 +238,7 @@ export default class Admin extends React.Component <Props, State>{
                         <img className={"img-order"} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
                         <li>{product.productName}</li>
                         <li>{product.unitPrice+ "SEK"}</li>
-                        <li>total-köpt: {product.counted}</li>
+                        <li>amount-shop: {product.counted}</li>
                     </ul>
             })
         }
@@ -228,9 +254,9 @@ export default class Admin extends React.Component <Props, State>{
             }`
         };
         let data = await requestHandler(requestBody);
-        console.log(data, 'here is shipper data')
-        typeof data !== 'undefined' ? this.setState({choosenShipper:{orderId:orderId, shipper:data.getSpeceficShipper}},()=>{console.log(this.state.choosenShipper, 'gick bra')})
-        :this.setState({choosenShipper:{orderId:'', shipper:{_id:'', shippingPrice:0, shippingMethod:'', companyName:''}}},()=>console.log(this.state.choosenShipper, 'her is gick inte bra'))
+      
+        typeof data !== 'undefined' ? this.setState({choosenShipper:{orderId:orderId, shipper:data.getSpeceficShipper}})
+        :this.setState({choosenShipper:{orderId:'', shipper:{_id:'', shippingPrice:0, shippingMethod:'', companyName:''}}})
     
         
     
@@ -247,17 +273,16 @@ export default class Admin extends React.Component <Props, State>{
     
     displayOrders = ()=> {
         if(this.state.orders.length > 0) {
-            console.log(this.state.orders)
         let orders =  this.state.orders.map((order)=>{
             return <ul className={"orderContainer"}>
                         One Order: 
                         <li>Id: {order._id}</li>
-                        <li>Namn: {order.shipFirstName}</li>
-                        <li>Efternamn: {order.shipLastName}</li>
-                        <li>Address: {order.shippAdress} Postnummer: {order.shippPostelCode} Stad: {order.shipCity}</li>
-                        <li>Mail: {order.shipMail}</li>
+                        <li>Name: {order.shipFirstName}</li>
+                        <li>Lastname: {order.shipLastName}</li>
+                        <li>Address: {order.shippAdress} Postnum: {order.shippPostelCode} City: {order.shipCity}</li>
+                        <li>Email: {order.shipMail}</li>
                         <li>Tel: {order.shipPhoneNo}</li>
-                        <li>Datum: {order.orderDate}</li>
+                        <li>Date: {order.orderDate}</li>
                         <button className={"orderButton"}  onClick={()=> this.showOrderDetails(order._id)}>Visa order details</button>
                         <div>{this.state.current_orders_products.id === order._id ? this.showCurrentOrderProduct():''}</div>
                         
@@ -268,7 +293,7 @@ export default class Admin extends React.Component <Props, State>{
             })
 
             return <div>
-            <button onClick={this.hideOrder}>Gömma Alla Beställningar!</button>
+            <button onClick={this.hideOrder}>Hide all orders!</button>
             {orders}
             </div>  
         }
@@ -277,6 +302,7 @@ export default class Admin extends React.Component <Props, State>{
         if(this.state.shippers.length > 0 ) {
             let shippers = this.state.shippers.map((shipper)=>{
                 return <ul className={"orderContainer"}>
+                    <span>One shipping method</span>
                     <li>{shipper._id}</li>
                     <li>{shipper.companyName}</li>
                     <li>{shipper.shippingMethod}</li>
@@ -286,7 +312,7 @@ export default class Admin extends React.Component <Props, State>{
                 </ul>
             })
             return <div>
-            <button onClick={this.hideShipper}>Gömma Alla Leverans Methoder!</button>
+            <button onClick={this.hideShipper}>Hide all shippng methods!</button>
             {shippers}
             </div>  
         }
@@ -299,7 +325,8 @@ export default class Admin extends React.Component <Props, State>{
     showShipperForm = ()=>{this.setState({ showShipperForm:true})};
     hideShipperForm = ()=>{this.setState({ showShipperForm:false,   modifiedShipp:false, modifiedShipper:{_id:'', companyName:'', shippingPrice:0, shippingMethod:''}})};
     hideProducts = ()=>{this.setState({ products:[]})};
-    displayUsers = ()=> {
+    hideSubscription = ()=>{this.setState({ subscriptions:[]})};
+    displayUsers = ()=> { 
         if(this.state.users.length > 0 ) {
             let users =  this.state.users.map((user)=>{
                 return <ul className={"orderContainer"}>
@@ -309,8 +336,10 @@ export default class Admin extends React.Component <Props, State>{
                 </ul>
             })
             return <div>
-            <button onClick={this.hideUser}>Gömma Alla Anvädare!</button>
+            <button onClick={this.hideUser}>Hide all users!</button>
+        <span>Amount: {this.state.users.length}</span>
             {users}
+            
             </div>  
         }
        
@@ -319,7 +348,7 @@ export default class Admin extends React.Component <Props, State>{
         if(this.state.showProductForm === true || this.state.modifiedProdcut === true) {
 
             return (<div>
-                     <button onClick={this.hideProduktForm}>Gömma Produkts Formen!</button>
+                     <button onClick={this.hideProduktForm}>Hide Product form!</button>
                     <ProductForm  modified={this.state.modified}/>
                 </div>)
         }
@@ -339,7 +368,7 @@ export default class Admin extends React.Component <Props, State>{
         if(this.state.showShipperForm === true || this.state.modifiedShipp === true) {
 
             return (<div>
-                     <button onClick={this.hideShipperForm}>Gömma Leverans Methoder Formen!</button>
+                     <button onClick={this.hideShipperForm}>Hide shipping method form!</button>
                     <ShipperForm modified={this.state.modifiedShipper} getAllShipperMethods={this.getAllShipperMethods}/>
                 </div>)
         }
@@ -409,7 +438,7 @@ export default class Admin extends React.Component <Props, State>{
                 
 
                 return <ul className={"orderContainer"}>
-                    <span>En Produkt: </span>
+                    <span>One Product: </span>
                     <li>{product._id}</li>
                     <li>{product.productName}</li>
                     <li>{product.pictureUrl}</li>
@@ -422,30 +451,50 @@ export default class Admin extends React.Component <Props, State>{
                 
             })
             return <div>
-            <button onClick={this.hideProducts}>Gömma Alla Produkter!</button>
+            <button onClick={this.hideProducts}>Hide All Products!</button>
             {products}
             </div>  
         }
     }
+    displaySubscriptions = ()=>{
+        if(this.state.subscriptions.length > 0 ){
+            let subscriptions =  this.state.subscriptions.map((subscription)=>{
+                
 
+                return <ul className={"orderContainer"}>
+                    <span>One Subscription: </span>
+                    <li>id: {subscription._id}</li>
+                    <li>Email: {subscription.email}</li>
+        
+                </ul>
+                
+            })
+            return <div>
+            <button onClick={this.hideSubscription}>Hide All Subscriptions!</button>
+            {subscriptions}
+            </div>  
+        }
+    }
 
    
     render(){
         return(
             <div style={adminContainer}>
-                <h1>Hej Admin</h1>
-                <button style={item} onClick={this.showProductForm}>Skapa En Produkt/update</button>
+                <h1>Hey Admin</h1>
+                <button style={item} onClick={this.showProductForm}>Create A Product/update</button>
                 {this.displayProduktForm()}
-                <button style={item} onClick={this.showShipperForm}>Skapa En Leverans Method/update</button>
+                <button style={item} onClick={this.showShipperForm}>Create A Shipping method/update</button>
                 {this.displayShipperForm()}
-                <button style={item} onClick={this.getAllProducts}>Visa Alla produkter</button>
+                <button style={item} onClick={this.getAllProducts}>Show All Products!</button>
                 {this.displayProduct()}
-                <button style={item} onClick={this.getAllOrders}>Visa Alla Beställningar Från Alla Användare!</button>
+                <button style={item} onClick={this.getAllOrders}>Show All Orders!</button>
                 {this.displayOrders()}
-                <button style={item} onClick={this.getAllUsers}>Visa Alla Användare!</button>
+                <button style={item} onClick={this.getAllUsers}>Show All Users!</button>
                 {this.displayUsers()}
-                <button style={item} onClick={this.getAllShipperMethods}>Visa Alla Levernans Methoder!</button>
+                <button style={item} onClick={this.getAllShipperMethods}>Show All Shipping Methods!</button>
                 {this.displayShippers()}
+                <button onClick={this.getAllSubscription}>Show All Subscription</button>
+                {this.displaySubscriptions()}
                  
             </div>
             

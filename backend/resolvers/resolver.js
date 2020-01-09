@@ -4,6 +4,7 @@ const Shipper = require('../models/shipper');
 const Order = require('../models/order');
 const OrderDetails = require('../models/orderDetails');
 const bcrypt = require('bcryptjs');
+const Subscription = require('../models/subscription');
 
 
 const  Root ={
@@ -289,9 +290,39 @@ const  Root ={
         } catch(error){
             throw  new Error("Error at finding specefic product" + error)
         }
-    }
+    },
+    
+    subscriptions:()=>{
+        try {
+            return Subscription.find();
 
+        } catch(error){
+            throw new Error("Error at geting all Subscriptions")
+        }
+    },
 
+    createSubscription: async (args) => {
+        try {
+
+            let SubscriptionRes = await Subscription.findOne({email:args.SubscriptionInput.email});
+            let relShubscription = await SubscriptionRes 
+            
+            if(relShubscription) {
+                throw new Error('Email Already Exist')
+                
+            } else {
+
+                const subscription= new Subscription ({
+                    email:args.SubscriptionInput.email
+                   
+                })
+    
+                return subscription.save();
+            }
+        } catch(error){
+            throw  new Error("Error at creating new newsLetter " + error)
+        }
+    },
 
 }
 module.exports = Root;

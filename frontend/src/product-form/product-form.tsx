@@ -98,7 +98,7 @@ export default class ProductForm extends React.Component<Props, State>{
     }
     render () {
         return( 
-
+            /* Having multiple line may cause 400 request since string should be on one line */
             <FormMall>
                  <form onSubmit={this.handleSubmit} className={"formStyle"}>
                     {this.displayChoosenDataToModifiy()}
