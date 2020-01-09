@@ -246,8 +246,8 @@ export default class Form extends Component<Props,State>{
               }`
           };
           let data = await requestHandler(requestBody);
-          typeof data !== 'undefined' ? this.setState({choosenShipper:{orderId:orderId, shipper:data.getSpeceficShipper}},()=>{console.log(this.state.choosenShipper, 'gick bra')})
-          :this.setState({choosenShipper:{orderId:'', shipper:{_id:'', shippingPrice:0, shippingMethod:'', companyName:''}}},()=>console.log(this.state.choosenShipper, 'her is gick inte bra'))
+          typeof data !== 'undefined' ? this.setState({choosenShipper:{orderId:orderId, shipper:data.getSpeceficShipper}})
+          :this.setState({choosenShipper:{orderId:'', shipper:{_id:'', shippingPrice:0, shippingMethod:'', companyName:''}}})
       
           }
     
@@ -305,7 +305,6 @@ export default class Form extends Component<Props,State>{
     }
 
     renderCurrentUserInfo = () => {
-      console.log(this.props.userInfo)
       if(this.props.userInfo.id !== '' && this.props.userInfo.email !== "admin@gmail.com") {
         return (<div className={"orderContainer"}>
                  <button className={"orderButton"} onClick={this.getCurrentOrders}>Show All Orders! </button>

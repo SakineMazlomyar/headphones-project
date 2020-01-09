@@ -35,8 +35,8 @@ export default class Layout extends React.Component<Props, State>{
         let selectedUsers:any = localStorage.getItem("users");
         let currentShoppingCard:any = localStorage.getItem("shoppingcart");
      
-        selectedUsers === null || selectedUsers === false ? localStorage.setItem("users","[]"): console.log(JSON.parse(selectedUsers));
-        currentShoppingCard === null ||currentShoppingCard === false ? localStorage.setItem("shoppingcart",JSON.stringify([])): console.log( JSON.parse(currentShoppingCard));
+        selectedUsers === null || selectedUsers === false ? localStorage.setItem("users","[]"):'';
+        currentShoppingCard === null ||currentShoppingCard === false ? localStorage.setItem("shoppingcart",JSON.stringify([])): '';
 
         this.checkForUser()
     }
@@ -47,7 +47,7 @@ export default class Layout extends React.Component<Props, State>{
         let current_user :any = localStorage.getItem("current_user");
         let parsedCurrentUser:any = JSON.parse(current_user);
         if(current_user) {
-            this.setState({current_user:{username:parsedCurrentUser.username, id:parsedCurrentUser.id, email:parsedCurrentUser.email}}, ()=>{console.log(this.state, 'here is current_user')})
+            this.setState({current_user:{username:parsedCurrentUser.username, id:parsedCurrentUser.id, email:parsedCurrentUser.email}})
         }
 
       }
@@ -85,7 +85,7 @@ export default class Layout extends React.Component<Props, State>{
          
             initTolatlPrice += price
         }
-        this.setState({amount:products.length, totalPrice:initTolatlPrice}, ()=>{console.log(this.state.totalPrice)})
+        this.setState({amount:products.length, totalPrice:initTolatlPrice})
 
     }
 

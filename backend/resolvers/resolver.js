@@ -80,7 +80,6 @@ const  Root ={
 
             let productRes = await Product.findOne({productName:args.ProductInput.productName});
             let relProduct = await productRes
-            console.log(relProduct, 'here')
             if(relProduct) {
                 throw new Error('Product alread exist')
                 
@@ -193,8 +192,6 @@ const  Root ={
            
             let user = await User.findById(_id);
             let relUser = await user;
-            //console.log(relUser)
-         
             if(!relUser ) {
                 throw new Error('This user does not exist while searching order for this user!')
                 
@@ -239,7 +236,6 @@ const  Root ={
                     }
                 }
             })
-            console.log(addedCoundPro)
             return addedCoundPro
             }
         } catch(error) {
@@ -251,8 +247,6 @@ const  Root ={
            
             let shipper = await Shipper.findById(_id);
             let relShipper = await shipper;
-            //console.log(relUser)
-         
             if(!relShipper ) {
                 throw new Error('We chould not fin this specefic shipper')
                 

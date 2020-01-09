@@ -88,11 +88,9 @@ export default class CheckOut extends Component<Props,State>{
             })
             
           let actuResponse = await res.data;
-          console.log(actuResponse, 'here is shippers')
-          actuResponse.data.shippers !== false ? this.setState({shippers: actuResponse.data.shippers},()=>{console.log(this.state.shippers, 'here is test')}): this.setState({shippers:[]})
+          actuResponse.data.shippers !== false ? this.setState({shippers: actuResponse.data.shippers}): this.setState({shippers:[]})
           
         } catch(err){
-          //alert('Could not get all Products!')
            console.log("Error at getting shippers"+err)
         }
     }
@@ -130,7 +128,6 @@ export default class CheckOut extends Component<Props,State>{
                   createdOrder:this.state.createdOrder,
                   selectedShipper:this.state.selectedShipper === ''?this.state.shippers[0]._id:this.state.selectedShipper,
                  }
-                 console.log(current_order, 'oneOrder')
              try  {
                let res = await Axios({
                    url:'/pay2',
@@ -143,11 +140,9 @@ export default class CheckOut extends Component<Props,State>{
                  
                let actuResponse = await res.data;
                window.location.assign(actuResponse.url)
-               console.log(actuResponse)
                localStorage.setItem("shoppingcart",JSON.stringify([]))
             
              } catch(err){
-               //alert('Could not get all Products!')
                 console.log("Error at posting orders"+err)
              }
      
@@ -182,16 +177,13 @@ export default class CheckOut extends Component<Props,State>{
             
                 initTolatlPrice += price
             }
-
-        console.log(initTolatlPrice)
         let finalTotalPrice = totalPrice === 0?  initTolatlPrice: totalPrice
         this.setState({totalPrice: finalTotalPrice}
         
     ) }
 
     handleSelectShipper = (event: any)=>{ 
-        this.setState({selectedShipper:event.target.value},
-            ()=>{console.log(this.state.selectedShipper, 'heher')}) }
+        this.setState({selectedShipper:event.target.value}) }
 
     
     renderShippers = ()=>{

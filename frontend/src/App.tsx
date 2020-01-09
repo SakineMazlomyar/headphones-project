@@ -21,7 +21,6 @@ interface Props {}
     }
 
     isLoggedin = (user:{email:string, userId:string})=>{
-        console.log(user, 'hello from user')
         this.setState({userId:user.userId, email:user.email})
     }
     /* // <Form isLoggedin={this.isLoggedin}/>

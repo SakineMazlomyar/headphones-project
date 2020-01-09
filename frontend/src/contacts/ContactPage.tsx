@@ -24,7 +24,7 @@ export default class ContactPage extends React.Component<Props, State>{
 
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(this.state.email)
+    
      
         let requestBody = {
             query: `

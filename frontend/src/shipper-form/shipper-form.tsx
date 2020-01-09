@@ -32,9 +32,6 @@ export default class ShipperForm extends React.Component<Props, State>{
     }
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-
-
-        console.log(this.state)
         let requestBody = {
             query: `
             mutation {

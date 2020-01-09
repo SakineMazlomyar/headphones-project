@@ -70,9 +70,7 @@ export default class ProductForm extends React.Component<Props, State>{
        
         }
           let data = await  requestHandler(requestBody);
-          console.log(requestBody)
           if(typeof data !== 'undefined') {
-                console.log(data)
               data.createProduct?alert("Success to create a produkt id= " +  data.createProduct._id):alert("Updated succes")
           }
         

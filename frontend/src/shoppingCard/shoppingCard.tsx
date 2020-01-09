@@ -65,7 +65,6 @@ export default class ShoppingCard extends React.Component<Props, State>{
     }
 
     renderLinkToCheckOut = ()=>{
-        console.log(this.props.amount, 'here is amount')
         if(this.props.amount >= 0) {
             return (
                 <Link to={"/checkOut"}>

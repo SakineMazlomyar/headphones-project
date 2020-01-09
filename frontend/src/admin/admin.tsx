@@ -396,7 +396,6 @@ export default class Admin extends React.Component <Props, State>{
         
     }
     removeThisProduct = async (product:{productName: string, _id:string, unitPrice:number, unitInStock:number,pictureUrl:string, description:string})=>{
-        console.log(product._id)
         let requestBody = {
             query: `
             mutation {
@@ -411,7 +410,6 @@ export default class Admin extends React.Component <Props, State>{
           };
         
         let data = await  requestHandler(requestBody);
-        console.log(data)
         typeof data !== 'undefined' ? 
 
         this.getAllProducts().then(()=>{
@@ -437,7 +435,6 @@ export default class Admin extends React.Component <Props, State>{
           };
         
         let data = await  requestHandler(requestBody);
-        console.log(data)
         typeof data !== 'undefined' ? this.getAllShipperMethods().then(()=>{
             alert(data.deleteShipper.n) 
         }):alert("We could not remove this shipper")

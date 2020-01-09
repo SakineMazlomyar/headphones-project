@@ -49,7 +49,7 @@ export async function loginHandler(requestBody:any){
         //When use insert the same email to create a new user
         alert(actuResponse.errors[0].message);
     } else if(actuResponse.errors) {
-          console.log (actuResponse);
+         
           alert('Error at sign in!')
     } else {
       //this.props.isLoggedin(actuResponse.data.login)
