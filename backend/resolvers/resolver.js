@@ -5,19 +5,6 @@ const Order = require('../models/order');
 const OrderDetails = require('../models/orderDetails');
 const bcrypt = require('bcryptjs');
 
-const findUser = async (userId) => {
-    try {
-        let u = await User.findById(userId)
-        let relU = await u;
-        console.log(relu, 'here is user')
-        return {...relU._doc, _id:relU.id}
-    } catch(error) {
-        throw new Error('Error at getting specefic user' + error)
-    }
-}
-
-
-
 
 const  Root ={
     
@@ -87,10 +74,12 @@ const  Root ={
     },
 
     createProduct: async (args) => {
+        
         try {
 
-            let productRes = await Product.findOne({productName:args.ProductInput.productName, pictureUrl:args.ProductInput.pictureUrl});
+            let productRes = await Product.findOne({productName:args.ProductInput.productName});
             let relProduct = await productRes
+            console.log(relProduct, 'here')
             if(relProduct) {
                 throw new Error('Product alread exist')
                 
@@ -132,7 +121,7 @@ const  Root ={
 
             let ShipperRes = await Shipper.findOne({companyName:args.ShipperInput.companyName});
             let relShippers = await ShipperRes 
-            console.log(relShippers)
+            
             if(relShippers) {
                 throw new Error('Shipper Method Already exsit')
                 

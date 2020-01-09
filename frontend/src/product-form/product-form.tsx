@@ -36,21 +36,18 @@ export default class ProductForm extends React.Component<Props, State>{
     }
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        console.log(this.state)
+        
         let requestBody = {
-            query: `mutation {
-                 createProduct(ProductInput: {
-                     productName: "${this.state.productName}",
-                  unitPrice: ${Number(this.state.unitPrice)},
-                   pictureUrl: "${this.state.pictureUrl}", 
-                   unitInStock: ${Number(this.state.unitInStock)},
-                    description:"${this.state.description}" }) {
-                   _id
-                   
-                 }
-               }
-               
-             `
+            query: `
+            mutation { createProduct(ProductInput: 
+            {productName: "${this.state.productName}",
+                 unitPrice:  ${Number(this.state.unitPrice)},
+                unitInStock:${Number(this.state.unitInStock)},
+                 pictureUrl:"${this.state.pictureUrl}",
+                description: "${this.state.description}"}) {
+                _id
+              }
+            }`
            };
         if(this.props.modified._id !== '') {
      
@@ -60,8 +57,8 @@ export default class ProductForm extends React.Component<Props, State>{
                 _id:"${this.props.modified._id}",
                 productName: "${this.state.productName}",
                  unitPrice: ${Number(this.state.unitPrice)},
-                  pictureUrl: "${this.state.pictureUrl}", 
-                  unitInStock: ${Number(this.state.unitInStock)},
+                 unitInStock: ${Number(this.state.unitInStock)},
+                 pictureUrl: "${this.state.pictureUrl}", 
                    description:"${this.state.description}" }) {
                   _id
                   
@@ -73,6 +70,7 @@ export default class ProductForm extends React.Component<Props, State>{
        
         }
           let data = await  requestHandler(requestBody);
+          console.log(requestBody)
           if(typeof data !== 'undefined') {
                 console.log(data)
               data.createProduct?alert("Success to create a produkt id= " +  data.createProduct._id):alert("Updated succes")
@@ -104,11 +102,12 @@ export default class ProductForm extends React.Component<Props, State>{
             <FormMall>
                  <form onSubmit={this.handleSubmit} className={"formStyle"}>
                     {this.displayChoosenDataToModifiy()}
-                    <input className={"inputStyle"} type="text"  placeholder='product-name' onChange={this.handleProduktName} value={this.state.productName}  required/>
-                    <input type="number" name="quantity" min="1" max="1000" placeholder='unitInStock' onChange={this.handleUnitInStock} value={ this.state.unitInStock}/>
-                    <input className={"inputStyle"} type="text"  placeholder="unitPrice" onChange={this.handleProductPrice} value={this.state.unitPrice} required/>
-                    <input className={"inputStyle"} type="text"  placeholder="pictureUrl.jpg" onChange={this.handleProduktPictureurl} value={this.state.pictureUrl} required/>
-                    <textarea placeholder="descrption"  value={this.state.description} onChange={this.handleProduktDescription}/>
+                    <input  className="inputStyle" type="text"  placeholder='product-name' onChange={this.handleProduktName} value={this.state.productName}  required/>
+                    <input  className="inputStyle" type="number" name="quantity" min="1" max="1000" placeholder='unitInStock' onChange={this.handleUnitInStock} value={ this.state.unitInStock}/>
+                    <input  className="inputStyle" type="text"  placeholder="unitPrice" onChange={this.handleProductPrice} value={this.state.unitPrice} required/>
+                    <input   className="inputStyle" type="text"  placeholder="pictureUrl.jpg" onChange={this.handleProduktPictureurl} value={this.state.pictureUrl} required/>
+                    <span>Avoid having multiple line</span>
+                    <textarea placeholder="descrption" rows={1} cols={150}  value={this.state.description} onChange={this.handleProduktDescription}/>
                        
                     <input type="submit" value='Submit'/>
                 </form>

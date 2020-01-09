@@ -143,7 +143,7 @@ export default class Admin extends React.Component <Props, State>{
 
     }
     getAllShipperMethods = async ()=>{
-        if(this.state.modifiedShipp === true || this.state.modifiedShipp === false) {
+        
              let requestBody = {
                  query: `{
                      shippers {
@@ -164,7 +164,7 @@ export default class Admin extends React.Component <Props, State>{
                }else {
                    this.setState({shippers: []})
                }
-        }
+        
     }
     getAllProducts = async ()=>{
         let requestBody = {

@@ -24,12 +24,12 @@ const Schema = require('./backend/schemas/schema');
 
 
 
-/* 
+
 //Here is how to use the build react
 app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.get('/', function(req, res) {
-res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
-}); */
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+});
 
 
 app.use('/graphql',graphqlHTTP({
@@ -37,13 +37,6 @@ app.use('/graphql',graphqlHTTP({
     graphiql:true,
     rootValue: Root,
 }));
-
-
-/* 
-To do this day:
-fix cancel and success url
-fix how to show data for user after they save their order send 
- */
 
 
 let currentData;
@@ -192,7 +185,6 @@ app.get('/success',(req,res)=> {
 app.get('/canceled',(req,res)=>{
     res.send('Canceled')
 })
-
 
 
 

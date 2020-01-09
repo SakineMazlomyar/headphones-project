@@ -137,8 +137,8 @@ export default class Form extends Component<Props,State>{
      
       let sigendInUser = {id:user.userId, email:user.email, choosenProducts:[]}
       parsetUsers.push(sigendInUser)
-      let newLocatStorage = localStorage.setItem("users", JSON.stringify(parsetUsers));
-      localStorage.setItem("current_user", JSON.stringify({id:user.userId, username:user.username}));
+      localStorage.setItem("users", JSON.stringify(parsetUsers));
+      localStorage.setItem("current_user", JSON.stringify({id:user.userId, username:user.username, email:user.email}));
       alert('You are signed in')
      }
      this.props.signedInUser()
@@ -293,6 +293,7 @@ export default class Form extends Component<Props,State>{
     }
 
     renderCurrentUserInfo = () => {
+      console.log(this.props.userInfo)
       if(this.props.userInfo.id !== '' && this.props.userInfo.email !== "admin@gmail.com") {
         return (<div className={"orderContainer"}>
                  <button className={"orderButton"} onClick={this.getCurrentOrders}>Show All Orders! </button>
