@@ -71,7 +71,7 @@ export default class Navbar extends React.Component<Props, State>{
         <h4  className="nav-item">
             <Link to={"/shoppingCard"}>
               
-          <span  className="fas fa-shopping-cart text-black navbar-text nav-link kundVagnWidth"> kundvagn {this.getLegthOfProducts()}</span>
+          <span  className="fas fa-shopping-cart text-black navbar-text nav-link kundVagnWidth"> Shopping Cart {this.getLegthOfProducts()}</span>
             </Link>
           </h4>
         </div>

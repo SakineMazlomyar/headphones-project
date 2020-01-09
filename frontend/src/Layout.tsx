@@ -35,8 +35,8 @@ export default class Layout extends React.Component<Props, State>{
         let selectedUsers:any = localStorage.getItem("users");
         let currentShoppingCard:any = localStorage.getItem("shoppingcart");
      
-        selectedUsers === null || selectedUsers === false ? localStorage.setItem("users","[]"):'';
-        currentShoppingCard === null ||currentShoppingCard === false ? localStorage.setItem("shoppingcart",JSON.stringify([])): '';
+        selectedUsers === null || selectedUsers === false ? localStorage.setItem("users","[]"):console.log('hej');
+        currentShoppingCard === null ||currentShoppingCard === false ? localStorage.setItem("shoppingcart",JSON.stringify([])): console.log('hej');
 
         this.checkForUser()
     }
@@ -60,7 +60,7 @@ export default class Layout extends React.Component<Props, State>{
      
         if(this.state.current_user.id !== '') {
             return <div>
-                    <h4 className="nav-link"> Hej {this.state.current_user.username }</h4>
+                    <h4 className="nav-link"> Hey {this.state.current_user.username }</h4>
                     <button className="nav-link" onClick={this.signOut}>Sign Out</button>
                 </div>
     
