@@ -3,7 +3,9 @@ import './mainView.css'
 import mainView from '../mainView.jpg'
 
 export default class MainView extends React.Component{
-   
+   /* Hide ordere func
+   remove console
+    */
     render(){
 
         return(

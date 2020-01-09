@@ -231,16 +231,23 @@ export default class Admin extends React.Component <Props, State>{
        
   
       }
+      hideOrderDetail = ()=>{this.setState( {current_orders_products:{id:'', products:[]}})}
+      hideChoosenShipper = ()=>{this.setState({ choosenShipper:{orderId:'', shipper:{_id:'', companyName:'', shippingPrice:0, shippingMethod:''}}})}
     showCurrentOrderProduct = ()=>{
         if(this.state.current_orders_products.products.length > 0) {
-            return this.state.current_orders_products.products.map((product)=>{
+            let orders = this.state.current_orders_products.products.map((product)=>{
                 return <ul className={"itemOrderContainer"} >
+                        
                         <img className={"img-order"} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
                         <li>{product.productName}</li>
                         <li>{product.unitPrice+ "SEK"}</li>
-                        <li>amount-shop: {product.counted}</li>
+                        <li>Amount-shop: {product.counted}</li>
                     </ul>
             })
+            return <div>
+              <button onClick={this.hideOrderDetail}>Hide Order Detail</button>
+              {orders}
+            </div>
         }
     }
     getChoosenShipper = async (id:string, orderId:string) => {   
@@ -262,11 +269,15 @@ export default class Admin extends React.Component <Props, State>{
     
     }
     displayChoosenShipper = ()=> {
-        return <ul className={"orderContainer"}>
-                    <li>{this.state.choosenShipper.shipper.companyName}</li>
-                    <li>{this.state.choosenShipper.shipper.shippingMethod}</li>
-                    <li>{this.state.choosenShipper.shipper.shippingPrice+ "SEK"}</li>
-                </ul>
+        return <div>
+        <button onClick={this.hideChoosenShipper}>Hide Choosen Shipper</button>
+        <ul className={"orderContainer"}>
+                <li>{this.state.choosenShipper.shipper.companyName}</li>
+                <li>{this.state.choosenShipper.shipper.shippingMethod}</li>
+                <li>{this.state.choosenShipper.shipper.shippingPrice+ "SEK"}</li>
+            </ul>
+        
+        </div>
     }
 
 

@@ -74,7 +74,7 @@ export default class Form extends Component<Props,State>{
 
     /* 
     add func for updating a user password or delete a user
-    add func if user is logged in do not show form else show form
+ 
     
     */
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
@@ -219,14 +219,19 @@ export default class Form extends Component<Props,State>{
     }
     showCurrentOrderProduct = ()=>{
         if(this.state.current_orders_products.products.length > 0) {
-            return this.state.current_orders_products.products.map((product)=>{
+            let orders = this.state.current_orders_products.products.map((product)=>{
                 return <ul className={"itemOrderContainer"} >
+                        
                         <img className={"img-order"} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
                         <li>{product.productName}</li>
                         <li>{product.unitPrice+ "SEK"}</li>
-                        <li>total-köpt: {product.counted}</li>
+                        <li>Amount-shop: {product.counted}</li>
                     </ul>
             })
+            return <div>
+              <button onClick={this.hideOrderDetail}>Hide Order Detail</button>
+              {orders}
+            </div>
         }
     }
     getChoosenShipper = async (id:string, orderId:string) => {
@@ -248,12 +253,18 @@ export default class Form extends Component<Props,State>{
     
     }
     displayChoosenShipper = ()=> {
-        return <ul className={"orderContainer"}>
+        return <div>
+            <button onClick={this.hideChoosenShipper}>Hide Choosen Shipper</button>
+            <ul className={"orderContainer"}>
                     <li>{this.state.choosenShipper.shipper.companyName}</li>
                     <li>{this.state.choosenShipper.shipper.shippingMethod}</li>
                     <li>{this.state.choosenShipper.shipper.shippingPrice+ "SEK"}</li>
                 </ul>
+            
+            </div>
     }
+    hideOrderDetail = ()=>{this.setState( {current_orders_products:{id:'', products:[]}})}
+    hideChoosenShipper = ()=>{this.setState({ choosenShipper:{orderId:'', shipper:{_id:'', companyName:'', shippingPrice:0, shippingMethod:''}}})}
     displayCurrentOrder = ()=> {
         if(this.state.current_orders.length > 0) {
             return this.state.current_orders.map((order)=>{
@@ -266,6 +277,7 @@ export default class Form extends Component<Props,State>{
                         <li>Tel: {order.shipPhoneNo}</li>
                         <li>Date Created This Order: {order.orderDate}</li>
                         <button className={"orderButton"}  onClick={()=> this.showOrderDetails(order._id)}>Visa order details</button>
+
                         <div>{this.state.current_orders_products.id === order._id ? this.showCurrentOrderProduct():''}</div>
                         
                         
