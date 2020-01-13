@@ -100,7 +100,13 @@ export default class Admin extends React.Component <Props, State>{
         }
     }
 
-/* Check mongo connection on deploy */
+/* Check mongo connection on deploy
+    test köp och alla funtions
+    skicka connection ohch secret on git när du deployar 
+    testa deploy påport 5000
+    kolla git om det går att klona så
+
+*/
     getAllOrders = async ()=>{
         let requestBody = {
             query: `
