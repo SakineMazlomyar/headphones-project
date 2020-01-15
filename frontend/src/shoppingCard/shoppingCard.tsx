@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import  './shoppingCard.css';
+import { changeUrl } from '../helpers/requestHandler';
 interface Props {
     amount:number,
     getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void,
@@ -68,7 +69,7 @@ export default class ShoppingCard extends React.Component<Props, State>{
         if(this.props.amount >= 0) {
             return (
                 <Link to={"/checkOut"}>
-                    <span id={"vidareKassan"}>Go To Checkout!</span>
+                    <span id={"vidareKassan"} onClick={()=>{ changeUrl('checkOut')}}>Go To Checkout!</span>
                 </Link>
             )
         } else {

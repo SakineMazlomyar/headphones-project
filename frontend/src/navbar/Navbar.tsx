@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './navbar.css'
+import './navbar.css';
+import { changeUrl } from '../helpers/requestHandler';
+
 interface Props{
     signedInUser:()=>any,
     amount:number
@@ -27,6 +29,10 @@ export default class Navbar extends React.Component<Props, State>{
       }
       
     }
+
+     
+
+
     
 
 
@@ -36,7 +42,8 @@ export default class Navbar extends React.Component<Props, State>{
          
        
             <Link to={"/"}>
-                   <span className="navbar-brand">SmartHeadphones</span>
+                   <span className="navbar-brand" onClick={()=>{ changeUrl('main')}}>SmartHeadphones</span>
+                   
             </Link>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
@@ -47,18 +54,19 @@ export default class Navbar extends React.Component<Props, State>{
 
             <li className="nav-item active">
             <Link to={"/productPage"}>
-                    <span className="nav-link" > Product Page</span>
+                   
+                    <span className="nav-link" onClick={()=>{ changeUrl('productPage')}}> Product Page</span>
             </Link>
           </li>
           <li className="nav-item">
           
             <Link to={"/contact"}>
-                    <span className="nav-link"> Contact Page</span>
+                    <span className="nav-link" onClick={()=>{ changeUrl('contact')}}> Contact Page</span>
             </Link>
           </li>
           <li  className="nav-item">
             <Link to={"/SigninSignUp"}>
-                <span className="nav-link"> Signin SignUp Page</span>
+                <span className="nav-link" onClick={()=>{ changeUrl('SigninSignUp')}}> Signin SignUp Page</span>
             </Link>
           </li>
           <li  className="nav-item">
@@ -71,7 +79,7 @@ export default class Navbar extends React.Component<Props, State>{
         <h4  className="nav-item">
             <Link to={"/shoppingCard"}>
               
-          <span  className="fas fa-shopping-cart text-black navbar-text nav-link kundVagnWidth"> Shopping Cart {this.getLegthOfProducts()}</span>
+                <span onClick={()=>{ changeUrl('shoppingCard')}} className="fas fa-shopping-cart text-black navbar-text nav-link kundVagnWidth"> Shopping Cart {this.getLegthOfProducts()}</span>
             </Link>
           </h4>
         </div>

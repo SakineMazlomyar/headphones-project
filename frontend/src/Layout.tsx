@@ -1,7 +1,6 @@
-import React,{CSSProperties} from 'react';
+import React from 'react';
 import Navbar from './navbar/Navbar';
 import ViewContainer from './ViewContainer';
-import Footer from './footer/footer';
 interface CurrentUser {
     id:string,
     username:string,
@@ -35,8 +34,8 @@ export default class Layout extends React.Component<Props, State>{
         let selectedUsers:any = localStorage.getItem("users");
         let currentShoppingCard:any = localStorage.getItem("shoppingcart");
      
-        selectedUsers === null || selectedUsers === false ? localStorage.setItem("users","[]"):console.log('hej');
-        currentShoppingCard === null ||currentShoppingCard === false ? localStorage.setItem("shoppingcart",JSON.stringify([])): console.log('hej');
+        selectedUsers === null || selectedUsers === false ? localStorage.setItem("users","[]"):localStorage.getItem("users");
+        currentShoppingCard === null ||currentShoppingCard === false ? localStorage.setItem("shoppingcart",JSON.stringify([])):localStorage.getItem("shoppingcart");
 
         this.checkForUser()
     }

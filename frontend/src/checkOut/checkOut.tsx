@@ -2,7 +2,7 @@ import React,{Component, CSSProperties} from 'react';
 import Axios from 'axios';
 import FormMall from '../signInSignUp/FormMall';
 import { Link } from 'react-router-dom';
-import { threadId } from 'worker_threads';
+import { changeUrl } from '../helpers/requestHandler';
 interface CurrentUser {
     id:string,
     username:string
@@ -109,7 +109,7 @@ export default class CheckOut extends Component<Props,State>{
              let choosenProducts = parsedShoppingCart.map((item:{ productName: string, _id:string, unitPrice: number, unitInStock: number, pictureUrl:string})=>{
                  productIds.push(item._id)
                      
-                 return {"name":item.productName, "sku":"item", "price":item.unitPrice.toString() +'.'+'00', "currency":"SEK", "quantity":1}
+                 return {"name":item.productName, "sku":"item", price:item.unitPrice.toString() +'.'+'00', "currency":"SEK", "quantity":1}
              })
      
      
@@ -200,10 +200,7 @@ export default class CheckOut extends Component<Props,State>{
     render(){
         return (
             <FormMall>
-                <h1>Here is kassan </h1>
-                <Link to={"/shoppingCard"}>
-                    <h5>Gå Tillbaka Tillbaka</h5>
-                </Link>
+                <span>Welcome To Checkout </span>
                 <form onSubmit={this.handleSubmit} style={formtStyle}>
                     <label><i className="fa fa-user"></i> Userrname</label>
                     <input type="text" id="fname" name="firstname" placeholder="Sven" onChange={this.handleFirstName} />
@@ -233,6 +230,9 @@ export default class CheckOut extends Component<Props,State>{
                     </select>
               <input type="submit" value='Slutföra Ditt Köp'/>
           </form>
+          <Link to={"/shoppingCard"}>
+                    <span onClick={()=>{ changeUrl('shoppingCard')}}>Want To Go Back ToShopping Cart</span>
+        </Link>
         </FormMall>
 
         )

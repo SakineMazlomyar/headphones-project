@@ -165,7 +165,7 @@ app.get('/success',(req,res)=> {
 
                             });
                             /* Change it when you deploy the app */
-                            res.send('Success To Create Your Order.Close This page Or Conctinue Shopping !')
+                            res.write('<h1>Success To Create Your Order.Close This page Or Conctinue Shopping !</h1>')
                             
                          }
 
@@ -185,7 +185,26 @@ app.get('/success',(req,res)=> {
 app.get('/canceled',(req,res)=>{
     res.send('Canceled')
 })
+app.get('/main', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
 
+app.get('/productPage', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
+
+app.get('/contact', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
+app.get('/SigninSignUp', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
+app.get('/shoppingCard', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
+app.get('/checkOut', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
 
 
 const port = 5000;

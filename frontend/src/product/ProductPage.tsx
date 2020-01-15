@@ -1,5 +1,4 @@
 import React from 'react';
-import Axios from 'axios';
 import  './productPage.css';
 import { requestHandler} from '../helpers/requestHandler';
 

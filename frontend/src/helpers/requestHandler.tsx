@@ -62,3 +62,14 @@ export async function loginHandler(requestBody:any){
      console.log(err)
   }
 }
+export async function changeUrl(url:string){
+  try {
+    let response = await Axios.get(url);
+    let actuallResponse = await response.data;
+
+
+  } catch(error) {
+    console.log(error)
+  }
+  
+}
