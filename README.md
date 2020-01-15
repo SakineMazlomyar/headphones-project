@@ -4,6 +4,7 @@
 
 ## Description:
 SmartHeadphones is single page application. It uses nodejs and graphql in backend and react/typescript i frontend.
+This uses latest node version and mongodb database. 
 SmartHeadphones has paypal sandbox as pay solution.
 
 ## To Run in Dev mode
@@ -15,5 +16,5 @@ SmartHeadphones has paypal sandbox as pay solution.
 
 ## To Run backend
 ### npm install in root directory
-### npm install 
+### npm run backend
 
