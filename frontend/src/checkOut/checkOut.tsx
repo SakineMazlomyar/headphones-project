@@ -62,8 +62,7 @@ export default class CheckOut extends Component<Props,State>{
         this.getShipperMethods();
         let createdOrder = new Date().toISOString();
         this.handleOrderDate(createdOrder);
-        this.handleOrderPrice();
-        //this.handleCreatedOrder()
+        this.handleOrderPrice(); 
        
     }
 
@@ -109,44 +108,46 @@ export default class CheckOut extends Component<Props,State>{
              let choosenProducts = parsedShoppingCart.map((item:{ productName: string, _id:string, unitPrice: number, unitInStock: number, pictureUrl:string})=>{
                  productIds.push(item._id)
                      
-                 return {"name":item.productName, "sku":"item", price:item.unitPrice.toString() +'.'+'00', "currency":"SEK", "quantity":1}
+                 return {"name":item.productName, "sku":"item", "price":item.unitPrice.toString() +'.'+'00', "currency":"SEK", "quantity":1}
              })
      
-     
-               let current_order = {
-                  items:choosenProducts,
-                  productIds:productIds,
-                  shipFirstName:this.state.shipFirstName,
-                  shipLastName:this.state.shipLastName,
-                  shippAdress:this.state.shippAdress,
-                  shippPostelCode:this.state.shippPostelCode,
-                  shipCity:this.state.shipCity,
-                  email:this.state.email,
-                  tel:this.state.tel,
-                  totalPrice:this.state.totalPrice,
-                  orderDate:this.state.orderDate,
-                  createdOrder:this.state.createdOrder,
-                  selectedShipper:this.state.selectedShipper === ''?this.state.shippers[0]._id:this.state.selectedShipper,
-                 }
-             try  {
-               let res = await Axios({
-                   url:'/pay2',
-                   method: 'POST',
-                   data: JSON.stringify(current_order),
-                   headers: {
-                     'Content-Type': 'application/json'
+                if(productIds.length <= 0) {
+                    alert("Select Product First")
+                } else {
+                    let current_order = {
+                        items:choosenProducts,
+                        productIds:productIds,
+                        shipFirstName:this.state.shipFirstName,
+                        shipLastName:this.state.shipLastName,
+                        shippAdress:this.state.shippAdress,
+                        shippPostelCode:this.state.shippPostelCode,
+                        shipCity:this.state.shipCity,
+                        email:this.state.email,
+                        tel:this.state.tel,
+                        totalPrice:this.state.totalPrice,
+                        orderDate:this.state.orderDate,
+                        createdOrder:this.state.createdOrder,
+                        selectedShipper:this.state.selectedShipper === ''?this.state.shippers[0]._id:this.state.selectedShipper,
+                       }
+                   try  {
+                     let res = await Axios({
+                         url:'/pay2',
+                         method: 'POST',
+                         data: JSON.stringify(current_order),
+                         headers: {
+                           'Content-Type': 'application/json'
+                         }
+                       })
+                       
+                     let actuResponse = await res.data;
+                     window.location.assign(actuResponse.url)
+                     localStorage.setItem("shoppingcart",JSON.stringify([]))
+                  
+                   } catch(err){
+                      console.log("Error at posting orders"+err)
                    }
-                 })
-                 
-               let actuResponse = await res.data;
-               window.location.assign(actuResponse.url)
-               localStorage.setItem("shoppingcart",JSON.stringify([]))
-            
-             } catch(err){
-                console.log("Error at posting orders"+err)
-             }
-     
-     
+           
+                }
            }
        })
      
@@ -191,7 +192,8 @@ export default class CheckOut extends Component<Props,State>{
 
             return this.state.shippers.map((shipper:{_id:string ,companyName:string ,shippingPrice:number,shippingMethod:string})=>{
 
-            return <option value={shipper._id}>{shipper.companyName}</option>
+            return <option value={shipper._id}>{
+                `${shipper.companyName} ${shipper.shippingMethod} ${shipper.shippingPrice}SEK`}</option>
             })
            
         }
@@ -203,29 +205,29 @@ export default class CheckOut extends Component<Props,State>{
                 <span>Welcome To Checkout </span>
                 <form onSubmit={this.handleSubmit} style={formtStyle}>
                     <label><i className="fa fa-user"></i> Userrname</label>
-                    <input type="text" id="fname" name="firstname" placeholder="Sven" onChange={this.handleFirstName} />
+                    <input type="text" id="fname" name="firstname" placeholder="Sven" onChange={this.handleFirstName} required />
 
                     <label ><i className="fa fa-user"></i> Lastname</label>
-                    <input type="text" id="lname" name="lastname" placeholder="Svensson" onChange={this.handleLastName}/>
+                    <input type="text" id="lname" name="lastname" placeholder="Svensson" onChange={this.handleLastName} required/>
 
                     <label><i className="fa fa-envelope"></i> Email</label>
                     
-                    <input type="email" id="email" name="email" placeholder="john@example.com" onChange={this.handleEmailAndPhone }/>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" onChange={this.handleEmailAndPhone } required/>
                     <label><i className="fa fa-home"></i> Address</label>
-                    <input type="text" id="adr" name="address" placeholder="Svenssongatan 14a" onChange={this.handleAddresss} />
+                    <input type="text" id="adr" name="address" placeholder="Svenssongatan 14a" onChange={this.handleAddresss} required/>
 
                     <label> City</label>
-                    <input type="text" id="city" name="city" placeholder="Goteborg" onChange={this.handleShipperCity}/>
+                    <input type="text" id="city" name="city" placeholder="Goteborg" onChange={this.handleShipperCity} required/>
 
                     <label><i className="fa fa-institution"></i> Postal code</label>
-                    <input type="text" id="postalcode" name="postalcode" placeholder="43350" onChange={this.handleShipperPostalconde} />
+                    <input type="text" id="postalcode" name="postalcode" placeholder="43350" onChange={this.handleShipperPostalconde} required />
 
                     <label> Phone</label>
-                    <input type="tel" id="shipPhoneNO" name="shipPhoneNO" placeholder="1212" onChange={this.handleEmailAndPhone }/>
+                    <input type="tel" id="shipPhoneNO" name="shipPhoneNO" placeholder="1212" onChange={this.handleEmailAndPhone } required/>
 
                     <label> Total Price In Sek</label>
                     <h5>{this.state.totalPrice} kr</h5>
-                    <select value={this.state.selectedShipper} onChange={this.handleSelectShipper}>
+                    <select value={this.state.selectedShipper} onChange={this.handleSelectShipper} required>
                         {this.renderShippers()}
                     </select>
               <input type="submit" value='Slutföra Ditt Köp'/>
@@ -237,11 +239,6 @@ export default class CheckOut extends Component<Props,State>{
 
         )
     }
-}
-
-
-const input: CSSProperties={
-    margin:"1em"
 }
 
 const formtStyle: CSSProperties ={

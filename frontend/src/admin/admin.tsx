@@ -2,6 +2,7 @@ import React,{CSSProperties} from 'react';
 import { requestHandler } from '../helpers/requestHandler';
 import ProductForm from '../product-form/product-form';
 import ShipperForm  from '../shipper-form/shipper-form';
+import './admin.css';
 interface  Order {
     _id:string,
     shipFirstName: string,
@@ -347,16 +348,14 @@ export default class Admin extends React.Component <Props, State>{
         if(this.state.users.length > 0 ) {
             let users =  this.state.users.map((user)=>{
                 return <ul className={"orderContainer"}>
-                    <li>{user._id}</li>
-                    <li>{user.email}</li>
-                    <li>{user.username}</li>
+                    <li>Id: {user._id}</li>
+                    <li>Email: {user.email}</li>
+                    <li>Name: {user.username}</li>
                 </ul>
             })
             return <div>
             <button onClick={this.hideUser}>Hide all users!</button>
-        <span>Amount: {this.state.users.length}</span>
             {users}
-            
             </div>  
         }
        
@@ -493,19 +492,19 @@ export default class Admin extends React.Component <Props, State>{
    
     render(){
         return(
-            <div style={adminContainer}>
+            <div className="adminContainer">
                 <h1>Hey Admin</h1>
-                <button style={item} onClick={this.showProductForm}>Create A Product/update</button>
+                <button className="buttonAdmin" onClick={this.showProductForm}>Create A Product/update</button>
                 {this.displayProduktForm()}
-                <button style={item} onClick={this.showShipperForm}>Create A Shipping method/update</button>
+                <button  className="buttonAdmin"  onClick={this.showShipperForm}>Create A Shipping method/update</button>
                 {this.displayShipperForm()}
-                <button style={item} onClick={this.getAllProducts}>Show All Products!</button>
+                <button  className="buttonAdmin"  onClick={this.getAllProducts}>Show All Products!</button>
                 {this.displayProduct()}
-                <button style={item} onClick={this.getAllOrders}>Show All Orders!</button>
+                <button  className="buttonAdmin"  onClick={this.getAllOrders}>Show All Orders!</button>
                 {this.displayOrders()}
-                <button style={item} onClick={this.getAllUsers}>Show All Users!</button>
+                <button  className="buttonAdmin"  onClick={this.getAllUsers}>Show All Users!</button>
                 {this.displayUsers()}
-                <button style={item} onClick={this.getAllShipperMethods}>Show All Shipping Methods!</button>
+                <button  className="buttonAdmin"  onClick={this.getAllShipperMethods}>Show All Shipping Methods!</button>
                 {this.displayShippers()}
                 <button onClick={this.getAllSubscription}>Show All Subscription</button>
                 {this.displaySubscriptions()}
@@ -515,15 +514,4 @@ export default class Admin extends React.Component <Props, State>{
         )
     }
 }
-
-
-const adminContainer:CSSProperties ={
-    display:"flex",
-    flexDirection:"column",
-    justifyContent:"space-around"
-}
-const item:CSSProperties ={
-   margin:"1em"
-}
-
 

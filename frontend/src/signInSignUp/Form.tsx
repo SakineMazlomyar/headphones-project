@@ -292,7 +292,7 @@ export default class Form extends Component<Props,State>{
         return (
           <FormMall>
             <h1>{this.state.isLoggedIn?'Sign In':'Sign Up!' }</h1>
-              <label>Byt till {this.renderSignInSignUp()}</label>
+              <label>Change To {this.renderSignInSignUp()}</label>
           <form onSubmit={this.handleSubmit} className={"formStyle"}>
            
                   <input className={"inputStyle"} type="email"  placeholder='email' onChange={this.handleOnChange} value={this.state.email}  required/>

@@ -3,7 +3,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding:1em
+    padding:2em
+
 }
 
 .item {
@@ -44,3 +45,6 @@
    
 }
 
+#allContainer {
+    margin-top: 2em;
+}

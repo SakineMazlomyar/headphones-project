@@ -127,7 +127,7 @@ export default class ProductPage extends React.Component<Props, State> {
 
     render(){
         return(
-          <div>
+          <div id="allContainer">
             {this.renderProducts()}
             {this.viewOnProduct()}
           </div>

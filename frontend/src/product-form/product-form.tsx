@@ -71,7 +71,27 @@ export default class ProductForm extends React.Component<Props, State>{
         }
           let data = await  requestHandler(requestBody);
           if(typeof data !== 'undefined') {
-              data.createProduct?alert("Success to create a produkt id= " +  data.createProduct._id):alert("Updated succes")
+              data.createProduct ? this.setState({
+                productName: '',
+                unitInStock:'',
+                unitPrice:'',
+                pictureUrl:'',
+                description:''
+            },()=>{
+                alert("Success to create a produkt id= " +  data.createProduct._id)
+            })
+              :
+              
+              
+              this.setState({
+                productName: '',
+                unitInStock:'',
+                unitPrice:'',
+                pictureUrl:'',
+                description:''
+            },()=>{
+                alert("Updated Success")
+            })
           }
         
     }
@@ -85,11 +105,11 @@ export default class ProductForm extends React.Component<Props, State>{
         if(this.props.modified._id !== '') {
             return <ul className={"orderContainer"}>
                 <li>id: {this.props.modified._id}</li>
-                <li>url: {this.props.modified.pictureUrl}</li>
                 <li>namn: {this.props.modified.productName}</li>
-                <li>beskrivning: {this.props.modified.description}</li>
-                <li>pris: {this.props.modified.unitPrice}</li>
                 <li>unitInStock: {this.props.modified.unitInStock}</li>
+                <li>pris: {this.props.modified.unitPrice}</li>
+                <li>url: {this.props.modified.pictureUrl}</li>
+                <li>beskrivning: {this.props.modified.description}</li>
 
             </ul>
         }
@@ -101,11 +121,11 @@ export default class ProductForm extends React.Component<Props, State>{
                  <form onSubmit={this.handleSubmit} className={"formStyle"}>
                     {this.displayChoosenDataToModifiy()}
                     <input  className="inputStyle" type="text"  placeholder='product-name' onChange={this.handleProduktName} value={this.state.productName}  required/>
-                    <input  className="inputStyle" type="number" name="quantity" min="1" max="1000" placeholder='unitInStock' onChange={this.handleUnitInStock} value={ this.state.unitInStock}/>
+                    <input  className="inputStyle" type="number" name="quantity" min="1" max="1000" placeholder='unitInStock' onChange={this.handleUnitInStock} value={ this.state.unitInStock} required/>
                     <input  className="inputStyle" type="text"  placeholder="unitPrice" onChange={this.handleProductPrice} value={this.state.unitPrice} required/>
                     <input   className="inputStyle" type="text"  placeholder="pictureUrl.jpg" onChange={this.handleProduktPictureurl} value={this.state.pictureUrl} required/>
                     <span>Avoid having multiple line</span>
-                    <textarea placeholder="descrption" rows={1} cols={150}  value={this.state.description} onChange={this.handleProduktDescription}/>
+                    <textarea placeholder="descrption" rows={1} cols={150}  value={this.state.description} onChange={this.handleProduktDescription} required/>
                        
                     <input type="submit" value='Submit'/>
                 </form>
