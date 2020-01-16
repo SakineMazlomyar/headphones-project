@@ -16,16 +16,6 @@ const OrderDetails = require('./backend/models/orderDetails');
 const Root  = require('./backend/resolvers/resolver');
 const Schema = require('./backend/schemas/schema');
 
-
-
-
-
-
-
-
-
-
-//Here is how to use the build react
 app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.get('/', function(req, res) {
     res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
@@ -34,7 +24,7 @@ app.get('/', function(req, res) {
 
 app.use('/graphql',graphqlHTTP({
     schema:Schema ,
-    graphiql:true,
+    graphiql:false,
     rootValue: Root,
 }));
 
