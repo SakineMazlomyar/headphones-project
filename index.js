@@ -154,8 +154,14 @@ app.get('/success',(req,res)=> {
                                 } 
 
                             });
-                            /* Change it when you deploy the app */
-                            res.write('<h1>Success To Create Your Order.Close This page Or Conctinue Shopping !</h1>')
+                            let fullUrl = req.protocol + '://' + req.get('host');
+                            res.write(`
+                            <div style="display:flex; flex-direction:column; justify-content: center; background-color:grey; align-items: center">
+                            <h1>Success To Create Your Order!</h1>
+                            <h1><a href=${fullUrl}>Click Here To Continue Shopping</a></h1>
+                            </div>
+                            `)
+                            res.end('')
                             
                          }
 
