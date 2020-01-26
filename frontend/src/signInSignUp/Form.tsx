@@ -270,12 +270,13 @@ export default class Form extends Component<Props,State>{
             return this.state.current_orders.map((order)=>{
             return <ul className={"orderContainer"}>
                         One Order: 
+                        <li>OrdId: {order._id}</li>
                         <li>Name: {order.shipFirstName}</li>
                         <li>Lastname: {order.shipLastName}</li>
                         <li>Address: {order.shippAdress} Postnummer: {order.shippPostelCode} Stad: {order.shipCity}</li>
                         <li>Email: {order.shipMail}</li>
                         <li>Tel: {order.shipPhoneNo}</li>
-                        <li>Date Created This Order: {order.orderDate}</li>
+                        <li>Date: {order.orderDate}</li>
                         <button className={"orderButton"}  onClick={()=> this.showOrderDetails(order._id)}>Visa order details</button>
 
                         <div>{this.state.current_orders_products.id === order._id ? this.showCurrentOrderProduct():''}</div>

@@ -1,44 +1,27 @@
 #removeButton {
     background-color: red;
 }
+
 .container {
+    width:40% !important;
     border-style: inset;
-    height:15em;
+    height:20em;
+    position: relative;
 }
 
-@media only screen and (max-width: 600px) {
-    .container {
-        border-style: inset;
-        height:20em;
-    }
-  
-    .majorContainer {
-        flex-wrap: wrap;
-        position: relative;
-    }
-    .img{
-        width:40%
-    }
+.majorContainer {
+    width:100%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: relative;
+}
+#img{
+    width:35%;
+}
      
-  }
-@media only screen and (min-width: 600px) {
-    .container {
-        border-style: inset;
-        height:20em;
-        position: relative;
-    }
-  
-    .majorContainer {
-        width:100%;
 
-        position: relative;
-    }
-    #img{
-        width:30%
-    }
-     
-  }
-  #vidareKassan{
-      background-color: black;
-      color: white
-  }
+
+#vidareKassan{
+    background-color: black;
+    color: white
+}

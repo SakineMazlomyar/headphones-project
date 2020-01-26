@@ -1,7 +1,7 @@
 import React from 'react';
 import  './productPage.css';
 import { requestHandler} from '../helpers/requestHandler';
-
+import { Alert } from 'reactstrap';
 interface Props {
   getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void
 }
@@ -17,17 +17,19 @@ interface Product {
 interface State {
     products:Product[],
     viewProduct:boolean,
-    choosenProduct:Product
+    choosenProduct:Product,
+    visible:boolean
 }
 export default class ProductPage extends React.Component<Props, State> {
   //private pictures: string[]
-
+  private timerID:any
     constructor(props:Props){
         super(props);
             this.state ={ 
             products:[{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}],
             viewProduct:false,
-            choosenProduct:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""}
+            choosenProduct:{productName: "", _id: "", unitPrice:0, unitInStock:0, pictureUrl:"", description:""},
+            visible:false
           
         
         }
@@ -67,6 +69,7 @@ export default class ProductPage extends React.Component<Props, State> {
               
              return   <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
                 <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
+               
                 <h6>{product.productName}</h6>
                 <h6>{product.unitPrice+" SEK"}</h6>
                 <h6>Produkt quentity: {product.unitInStock}</h6>
@@ -83,6 +86,19 @@ export default class ProductPage extends React.Component<Props, State> {
         }
     }
 
+    showAddedProduct = ()=> { 
+
+      this.setState({visible:true},()=>{
+        window.setTimeout(()=>{
+          this.setState({visible:false})
+        },1000)
+      });
+
+
+    
+    }
+
+
     addProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number,pictureUrl:string})=>{
         
         let shoppingCart:any = localStorage.getItem("shoppingcart");
@@ -90,7 +106,8 @@ export default class ProductPage extends React.Component<Props, State> {
         parsedShoppingCart.push(product);
         localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart));
         this.props.getAddedProducts(parsedShoppingCart);
-        alert('You Added One Product To Shopping cart!')
+       this.showAddedProduct();
+      
 
     }
     viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string, description:string})=>{
@@ -101,11 +118,17 @@ export default class ProductPage extends React.Component<Props, State> {
       })
      
     }
+    renderAlertView = ()=>{
+      
+    }
 
     viewOnProduct = ()=>{
       if(this.state.viewProduct) {
         return <div>
         <h5 id="link" onClick={()=> this.setState({viewProduct:false}) }>Go Back!</h5>
+        <Alert color="alert alert-success" isOpen={this.state.visible} >
+               You Added One Product To Shopping Cart
+        </Alert>
         <div  className={"backgroundOdd d-flex flex-column align-items-center"}>
           <img className={'img'} src={process.env.PUBLIC_URL +`/imgs/${this.state.choosenProduct.pictureUrl}`} alt={this.state.choosenProduct.productName}/>
           <div className={"detailContainer"}>
@@ -113,6 +136,7 @@ export default class ProductPage extends React.Component<Props, State> {
           <h6> Price: {this.state.choosenProduct.unitPrice+" SEK"}</h6>
           <h6>Produkt Quantity: {this.state.choosenProduct.unitInStock}</h6>
           <div>Description: {this.state.choosenProduct.description}</div>
+         
           <button id="addButton"onClick={()=> this.addProduct(this.state.choosenProduct)}>Add To Shopping Cart!</button>
 
           </div>

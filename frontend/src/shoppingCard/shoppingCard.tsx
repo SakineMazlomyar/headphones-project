@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import  './shoppingCard.css';
 import { changeUrl } from '../helpers/requestHandler';
+import { Alert } from 'reactstrap';
 interface Props {
     amount:number,
     getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void,
@@ -11,7 +12,8 @@ interface Props {
 interface State {
   
     removed:boolean,
-    test:any
+    test:any,
+    visible:boolean
 }
 export default class ShoppingCard extends React.Component<Props, State>{
     constructor(props:Props){
@@ -19,11 +21,20 @@ export default class ShoppingCard extends React.Component<Props, State>{
         this.state = {
         
             removed:false,
-            test:[]
+            test:[],
+            visible:false
         }
     }
 
+    showMessageForRemovedProduct = ()=> { 
 
+        this.setState({visible:true},()=>{
+          window.setTimeout(()=>{
+            this.setState({visible:false})
+          },1000)
+        });
+    }
+  
 
     removeItem = (product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string }, i:number)=>{
         let shoppingCart:any = localStorage.getItem("shoppingcart");
@@ -38,7 +49,7 @@ export default class ShoppingCard extends React.Component<Props, State>{
         localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart ))
         this.setState({removed: true});
         this.props.getAddedProducts(parsedShoppingCart);
-        alert('You Remove One item!');
+        this.showMessageForRemovedProduct()
     }
 
     getProductsFromShopingCard = ()=> {
@@ -85,7 +96,10 @@ export default class ShoppingCard extends React.Component<Props, State>{
             <div>
                 {this.renderLinkToCheckOut()}
                 <h1>Here is shopping card</h1>
-            <div  className={"container-fluid d-flex flex-row align-items-center backgroundOdd majorContainer"} >
+                <Alert color="alert alert-danger" isOpen={this.state.visible} >
+                You Removed One Product
+                </Alert>
+            <div  className={"d-flex align-items-center backgroundOdd majorContainer"} >
                 {this.getProductsFromShopingCard()}
             </div>
             </div>
