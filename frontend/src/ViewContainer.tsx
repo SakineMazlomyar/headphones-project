@@ -8,7 +8,8 @@ import Form from './signInSignUp/Form';
 import ShoppingCard  from './shoppingCard/shoppingCard';
 import CheckOut from './checkOut/checkOut';
 import Admin from './admin/admin';
-
+import SingleProduct from './singleProduct/SingleProduct';
+ 
 interface Product {
     productName: string,
     _id:string,
@@ -42,19 +43,22 @@ export default class ViewContainer extends React.Component<Props, State>{
         }
     }
 
- 
     render(){
         return (
         <React.Fragment>            
         <Switch>
             <React.Fragment>
                 <Route exact path="/" component={MainView}  />
-                <Route path="/productPage"  render={ ()=> <ProductPage getAddedProducts={this.props.getAddedProducts}/>}/>
+                <Route path="/productPage"  render={ ()=> <ProductPage 
+                getAddedProducts={this.props.getAddedProducts} 
+              
+                />}/>
                 <Route path="/contact" component={ContactPage}/>
                 <Route path="/SigninSignUp" render={()=> <Form signedInUser={this.props.signedInUser} userInfo={this.props.userInfo}/>} />
                 <Route path="/shoppingCard" render={ ()=> <ShoppingCard  amount={this.props.amount} getAddedProducts={this.props.getAddedProducts} /> }/>
                 <Route path="/checkOut" render={()=><CheckOut totalPrice={this.props.totalPrice} userInfo={this.props.userInfo}/>}/>
                 <Route path="/admin" component={Admin}/>
+                <Route path="/singleProduct"  render={ ()=> <SingleProduct   getAddedProducts={this.props.getAddedProducts} /> }/>
 
             </React.Fragment>
         </Switch>

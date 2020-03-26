@@ -12,16 +12,13 @@ interface Props {
 interface State {
   
     removed:boolean,
-    test:any,
     visible:boolean
 }
 export default class ShoppingCard extends React.Component<Props, State>{
     constructor(props:Props){
         super(props);
         this.state = {
-        
             removed:false,
-            test:[],
             visible:false
         }
     }
@@ -59,14 +56,11 @@ export default class ShoppingCard extends React.Component<Props, State>{
         if(parsedShoppingCart !== null && parsedShoppingCart.length > 0 ||this.state.removed === true){
            
             return parsedShoppingCart.map((product:{productName: string, _id:string, unitPrice:number, unitInStock:number, pictureUrl:string }, index:number)=>{
-                return <div 
-                className={"d-flex flex-column align-items-center backgroundOdd container"}
-               
-                >
+                return <div className={"d-flex flex-column align-items-center backgroundOdd container"}>
                              <img id={'img'} src={process.env.PUBLIC_URL +`/imgs/${product.pictureUrl}`} alt={product.productName}/>
                              <h4>{product.productName}</h4>
                              <h4>{product.unitPrice+' SEK'}</h4>
-                             <span>Antal: {1}</span>
+                             <span>Quantity: {1}</span>
                              <button id="removeButton"onClick={()=> this.removeItem(product, index)}>Remove</button>
                             
                            </div>
@@ -80,7 +74,7 @@ export default class ShoppingCard extends React.Component<Props, State>{
         if(this.props.amount >= 0) {
             return (
                 <Link to={"/checkOut"}>
-                    <span id={"vidareKassan"} onClick={()=>{ changeUrl('checkOut')}}>Go To Checkout!</span>
+                    <span id={"vidareKassan"} className={"containerVidareKassan"} onClick={()=>{ changeUrl('checkOut')}}>Go To Checkout!</span>
                 </Link>
             )
         } else {
@@ -94,8 +88,8 @@ export default class ShoppingCard extends React.Component<Props, State>{
         return(
                 
             <div>
+                <h4 id={'shopping-cart-title'}>Welcome To Shopping Cart</h4>
                 {this.renderLinkToCheckOut()}
-                <h1>Here is shopping card</h1>
                 <Alert color="alert alert-danger" isOpen={this.state.visible} >
                 You Removed One Product
                 </Alert>

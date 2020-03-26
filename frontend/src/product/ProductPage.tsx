@@ -2,8 +2,10 @@ import React from 'react';
 import  './productPage.css';
 import { requestHandler} from '../helpers/requestHandler';
 import { Alert } from 'reactstrap';
+import { Link } from 'react-router-dom';
 interface Props {
-  getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void
+  getAddedProducts:(data:[{productName: string,_id:string, unitPrice:number, unitInStock:number,pictureUrl:string}])=>void,
+ 
 }
 
 interface Product {
@@ -73,7 +75,9 @@ export default class ProductPage extends React.Component<Props, State> {
                 <h6>{product.productName}</h6>
                 <h6>{product.unitPrice+" SEK"}</h6>
                 <h6>Produkt quentity: {product.unitInStock}</h6>
-                <button id="viewButton" onClick={()=> this.viewProduct(product)}>View Product!</button>
+                <Link to={`/singleProduct/id=${product._id}`}> 
+                 <button id="viewButton" onClick={()=> this.viewProduct(product)}>View Product!</button>
+                </Link> 
               </div>
             }
                     
@@ -104,25 +108,23 @@ export default class ProductPage extends React.Component<Props, State> {
         let shoppingCart:any = localStorage.getItem("shoppingcart");
         let parsedShoppingCart = JSON.parse(shoppingCart);
         parsedShoppingCart.push(product);
+        
         localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart));
+        console.log(parsedShoppingCart, 'here is shopping cart 2')
         this.props.getAddedProducts(parsedShoppingCart);
        this.showAddedProduct();
       
 
     }
     viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string, description:string})=>{
-      this.setState({
-        viewProduct:true,
-        choosenProduct: product
-      
-      })
+      this.setState({ viewProduct:true, choosenProduct: product})
      
     }
-    renderAlertView = ()=>{
-      
-    }
 
-    viewOnProduct = ()=>{
+
+/*   
+    in case if singleProductPage wont work
+      viewOnProduct = ()=>{
       if(this.state.viewProduct) {
         return <div>
         <h5 id="link" onClick={()=> this.setState({viewProduct:false}) }>Go Back!</h5>
@@ -143,7 +145,7 @@ export default class ProductPage extends React.Component<Props, State> {
         </div>
       </div>
       }
-    }
+    } */
 
 
 
@@ -153,7 +155,7 @@ export default class ProductPage extends React.Component<Props, State> {
         return(
           <div id="allContainer">
             {this.renderProducts()}
-            {this.viewOnProduct()}
+            {/* this.viewOnProduct() */}
           </div>
             
         )

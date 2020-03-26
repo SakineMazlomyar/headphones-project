@@ -144,6 +144,7 @@ let schema = buildSchema (`
         users: [User!]!
         login(email: String!, password: String!): AuthData!
         products:[Product!]!
+        getSpeceficProduct(_id:ID!):Product!
         shippers:[Shipper!]!
         orders:[Order!]!
         getSpeceficOrder(_id:ID!):[Order!]!

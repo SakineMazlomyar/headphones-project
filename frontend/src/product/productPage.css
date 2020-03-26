@@ -19,7 +19,7 @@
 }
 
 #viewButton, #addButton {
-    width:50%;
+    width:100%;
     background-color:#f8f9fa;
 }
 #addButton {
@@ -28,14 +28,17 @@
 }
 #addButton:hover {
     font-size: 1.5em;
-    background-color: #797979;
+    background-color:hsl(213, 27%, 92%);;
 }
 
 
-#link{
-    color: rgba(0,0,0,.5);
-    border-style: dotted;
-    width:10%
+.left-arrow-color{
+   
+   
+    color:black;
+    margin-left: 3em;
+    width:30%;
+    height:3em;
     
 }
 .detailContainer {

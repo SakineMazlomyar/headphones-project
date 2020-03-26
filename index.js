@@ -192,7 +192,7 @@ app.get('/productPage', (req, res)=>{
 app.get('/contact', (req, res)=>{
     res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
 })
-app.get('/SigninSignUp', (req, res)=>{
+app.get('/SignInSignUp', (req, res)=>{
     res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
 })
 app.get('/shoppingCard', (req, res)=>{

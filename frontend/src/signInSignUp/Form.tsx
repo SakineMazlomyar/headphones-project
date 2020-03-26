@@ -46,7 +46,7 @@ interface choosenShipper {
 interface State{
     email:string,
     password:string,
-    isLoggedIn:boolean,
+    signedUp:boolean,
     text:string,
     signOut: boolean,
     current_user:string,
@@ -61,7 +61,7 @@ export default class Form extends Component<Props,State>{
             this.state ={ 
             email:'',
             password:'',
-            isLoggedIn:false,
+            signedUp:true,
             text:'',
             signOut:false,
             current_user:'',
@@ -72,11 +72,6 @@ export default class Form extends Component<Props,State>{
         }
     }
 
-    /* 
-    add func for updating a user password or delete a user
- 
-    
-    */
     handleSubmit= async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
      
@@ -92,7 +87,7 @@ export default class Form extends Component<Props,State>{
             `
           };
        
-          if (!this.state.isLoggedIn) {
+          if (!this.state.signedUp) {
             requestBody = {
               query: `
                 mutation {
@@ -142,21 +137,21 @@ export default class Form extends Component<Props,State>{
       alert('You are signed in')
      }
      this.props.signedInUser()
-     this.setState({signOut:true, email:'', password:'', text:'' , current_user:user.username})
+     this.setState({signOut:true, email:'', password:'', text:'' , current_user:user.username, current_orders:[]})
      
     }
 
     handleOnChange = (event: React.ChangeEvent<HTMLInputElement>)=>{this.setState({[event.target.type]:event.target.value } as Pick <State,any> )}
-    handleLogout = () => { this.setState({ isLoggedIn: false })}
-    handleLogin = () => { this.setState({ isLoggedIn: true })}
+    handleLogout = () => { this.setState({ signedUp: false })}
+    handleLogin = () => { this.setState({ signedUp: true })}
     
     renderSignInSignUp = ()=> {
         
-      return this.state.isLoggedIn ? <button onClick={this.handleLogout}>Sign In</button>: <button onClick={this.handleLogin}>Sign Up</button>;
+      return this.state.signedUp ? <button onClick={this.handleLogout}>Sign In</button>: <button onClick={this.handleLogin}>Sign Up</button>;
     }
 
     renderUsername = ()=> {
-      if(this.state.isLoggedIn) {
+      if(this.state.signedUp) {
         return '';
 
       } else {
@@ -265,9 +260,10 @@ export default class Form extends Component<Props,State>{
     }
     hideOrderDetail = ()=>{this.setState( {current_orders_products:{id:'', products:[]}})}
     hideChoosenShipper = ()=>{this.setState({ choosenShipper:{orderId:'', shipper:{_id:'', companyName:'', shippingPrice:0, shippingMethod:''}}})}
+    hideAllOrders = ()=>{this.setState({current_orders:[]})}
     displayCurrentOrder = ()=> {
         if(this.state.current_orders.length > 0) {
-            return this.state.current_orders.map((order)=>{
+            let test =  this.state.current_orders.map((order)=>{
             return <ul className={"orderContainer"}>
                         One Order: 
                         <li>OrdId: {order._id}</li>
@@ -286,13 +282,17 @@ export default class Form extends Component<Props,State>{
                         {this.state.choosenShipper.orderId === order._id ? this.displayChoosenShipper():''}
                  </ul>
             })
+            return <div>
+              <button onClick={this.hideAllOrders}>Hide All Orders</button>
+              {test}
+            </div>
         }
     }
 
-    renderForm = ()=>{
+    renderForm = () => {
         return (
           <FormMall>
-            <h1>{this.state.isLoggedIn?'Sign In':'Sign Up!' }</h1>
+            <h1>{this.state.signedUp?'Sign In':'Sign Up!' }</h1>
               <label>Change To {this.renderSignInSignUp()}</label>
           <form onSubmit={this.handleSubmit} className={"formStyle"}>
            

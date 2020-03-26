@@ -73,7 +73,23 @@ const  Root ={
             throw new Error('Error at finding all product '+ error)
         }
     },
+    getSpeceficProduct: async ({_id}) => {
+        try {
+           
+            let product = await Product.findById(_id);
+            let relProduct = await product;
+            if(!relProduct ) {
+                throw new Error('We could not find the specefic product')
+                
+            } else {
+    
+            return relProduct
+            }
+        } catch(error){
+            throw  new Error("Error at finding specefic product" + error)
+        }
 
+    },
     createProduct: async (args) => {
         
         try {

@@ -14,6 +14,7 @@
     flex-wrap: wrap;
     flex-direction: row;
     position: relative;
+    margin-top: 1em;
 }
 #img{
     width:35%;
@@ -22,6 +23,20 @@
 
 
 #vidareKassan{
-    background-color: black;
-    color: white
+    border-style:groove;
+    padding:0.5em;
+    background-color: #f8f9fa;
+    color:#b1a5a5;
+    text-align: center;
+  
+}
+.containerVidareKassan{
+    width:40%;
+    display: block;
+    margin: auto;
+    
+    
+}
+#shopping-cart-title{
+    text-align: center;
 }

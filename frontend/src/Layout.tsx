@@ -94,7 +94,11 @@ export default class Layout extends React.Component<Props, State>{
         return(
                 
             <div>
-                <Navbar signedInUser={this.renderCurrentSignedInUser} amount={this.state.amount}/>
+                <Navbar 
+                signedInUser={this.renderCurrentSignedInUser} 
+                amount={this.state.amount}
+                totalPrice={this.state.totalPrice}
+                />
                 <ViewContainer 
                 signedInUser={this.checkForUser}
                 userInfo={this.state.current_user}
