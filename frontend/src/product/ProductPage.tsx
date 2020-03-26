@@ -110,7 +110,6 @@ export default class ProductPage extends React.Component<Props, State> {
         parsedShoppingCart.push(product);
         
         localStorage.setItem("shoppingcart", JSON.stringify(parsedShoppingCart));
-        console.log(parsedShoppingCart, 'here is shopping cart 2')
         this.props.getAddedProducts(parsedShoppingCart);
        this.showAddedProduct();
       
