@@ -201,6 +201,15 @@ app.get('/shoppingCard', (req, res)=>{
 app.get('/checkOut', (req, res)=>{
     res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
 })
+app.get('/checkOut', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
+
+app.get('/singleProduct/:id', (req, res)=>{
+
+    res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
+})
+
 
 
 const port = 5000;

@@ -78,7 +78,7 @@ export default class Navbar extends React.Component<Props, State>{
                   pr.amount = count[rt]
                 return pr
                  
-                }
+                } 
             } 
 
         }), '_id').map((product:any)=>{

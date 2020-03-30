@@ -35,7 +35,7 @@ export default class SingleProduct extends React.Component<Props, State>{
     findSpeceficProduct = async ()=>{
       let url_string = window.location.href
       let url = new URL(url_string);
-      let param = url.pathname.substring(18)
+      let param = url.pathname.substring(19)
          let requestBody = {
           query: `{
             getSpeceficProduct(_id: "${param}") {

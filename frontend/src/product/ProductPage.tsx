@@ -1,6 +1,6 @@
 import React from 'react';
 import  './productPage.css';
-import { requestHandler} from '../helpers/requestHandler';
+import { requestHandler,changeUrl } from '../helpers/requestHandler';
 import { Alert } from 'reactstrap';
 import { Link } from 'react-router-dom';
 interface Props {
@@ -75,8 +75,16 @@ export default class ProductPage extends React.Component<Props, State> {
                 <h6>{product.productName}</h6>
                 <h6>{product.unitPrice+" SEK"}</h6>
                 <h6>Produkt quentity: {product.unitInStock}</h6>
-                <Link to={`/singleProduct/id=${product._id}`}> 
-                 <button id="viewButton" onClick={()=> this.viewProduct(product)}>View Product!</button>
+                <Link to={`/singleProduct/:id=${product._id}`}> 
+                
+                 <button id="viewButton" onClick={
+                   ()=> {
+                     this.viewProduct(product)
+                     let url = '/singleProduct/:id='+product._id;
+                     changeUrl(url)
+                  }
+                
+                }>View Product!</button>
                 </Link> 
               </div>
             }
@@ -116,6 +124,7 @@ export default class ProductPage extends React.Component<Props, State> {
 
     }
     viewProduct = (product:{ productName: string, _id:string, unitPrice:number,unitInStock:number, pictureUrl:string, description:string})=>{
+  
       this.setState({ viewProduct:true, choosenProduct: product})
      
     }

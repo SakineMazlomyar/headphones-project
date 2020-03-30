@@ -61,18 +61,19 @@ export async function loginHandler(requestBody:any){
     alert('Wrong info!Try again!')
      console.log(err)
   }
-}
+} 
 export async function changeUrl(url:string){
   try {
     let response = await Axios.get(url);
     let actuallResponse = await response.data;
-
+    console.log(actuallResponse)
 
   } catch(error) {
     console.log(error)
   }
-  
-}
+      
+}    
+
 export function setValueToLocalstoreage(key:string, value:any){
   
    localStorage.setItem(key, JSON.stringify(value));
