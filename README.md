@@ -1,4 +1,4 @@
-##¤Checkout here: http://159.89.94.168:5000/
+### Checkout: http://159.89.94.168:5000/
 
 ### SmartHeadphones 
 
