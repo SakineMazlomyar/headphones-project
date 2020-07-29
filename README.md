@@ -5,9 +5,9 @@
 ## Author: Sakine Mazlomyar
 
 ## Description:
-SmartHeadphones is single page application. It uses nodejs/graphql in backend and react/typescript i frontend.
+SmartHeadphones is single page application. It uses nodejs/graphql in backend and react/typescript in frontend.
 This project  uses latest node version and mongodb database. 
-SmartHeadphones has paypal sandbox as pay solution.
+SmartHeadphones has paypal sandbox as payment method.
     
 
 ## To Run in Dev mode
